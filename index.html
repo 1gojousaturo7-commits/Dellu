@@ -27,13 +27,16 @@ body {
   color: var(--text);
 }
 
+/* FIXED */
+.section { display: none; padding:40px; }
+.active { display: block; }
+
 /* NAV */
 nav {
   display: flex;
   justify-content: space-between;
   padding: 15px 40px;
   background: var(--card);
-  backdrop-filter: blur(10px);
 }
 
 /* HERO */
@@ -57,7 +60,6 @@ nav {
 /* GLASS */
 .glass {
   background: var(--card);
-  backdrop-filter: blur(12px);
   border-radius: 15px;
   padding: 20px;
   margin-top:20px;
@@ -80,7 +82,7 @@ input {
 }
 
 /* BUTTON */
-button.main, button {
+button {
   background:#43a047;
   color:white;
   padding:10px;
@@ -100,23 +102,14 @@ button.main, button {
   padding:20px;
   border-radius:15px;
   color:white;
-  transition:0.3s;
 }
-.card:hover { transform: scale(1.05); }
-
 .card:nth-child(1){background:#43a047;}
 .card:nth-child(2){background:#2e7d32;}
 .card:nth-child(3){background:#66bb6a;}
-.card:nth-child(4){background:#388e3c;}
 
 /* PROGRESS */
 .progress { background:#ddd; border-radius:10px; overflow:hidden; }
 .progress-bar { height:20px; background:#43a047; width:0%; }
-
-/* DONOR GLOW */
-.gold { color: gold; text-shadow:0 0 10px gold; }
-.silver { color:silver; }
-.bronze { color:#cd7f32; }
 
 /* HISTORY */
 .history-item {
@@ -124,12 +117,7 @@ button.main, button {
   justify-content:space-between;
   padding:10px;
   border-bottom:1px solid #ccc;
-  transition:0.3s;
 }
-.history-item:hover {
-  background:rgba(0,0,0,0.05);
-}
-
 </style>
 </head>
 
@@ -149,20 +137,16 @@ button.main, button {
 <div id="home" class="section active">
 
   <div class="split-hero">
-
     <div class="hero-left">
       <h1>Make a Difference 🌍</h1>
-      <p>Together we build a greener future</p>
       <button onclick="show('signup')">Get Started</button>
     </div>
 
     <div class="glass">
-      <h3>🌿 Impact Overview</h3>
       <p>Funds: ₹<span id="homeFunds">0</span></p>
       <p>Volunteers: <span id="homeVolunteers">120</span></p>
       <ol id="topDonors"></ol>
     </div>
-
   </div>
 
   <div class="glass">
@@ -223,7 +207,6 @@ button.main, button {
 <button onclick="donate()">Donate</button>
 </div>
 
-<!-- 🔥 NEW HISTORY -->
 <div class="glass">
 <h3>📜 Donation History</h3>
 <div id="history"></div>
@@ -233,81 +216,82 @@ button.main, button {
 
 <script>
 function show(id){
-document.querySelectorAll(".section").forEach(s=>s.style.display="none");
-document.getElementById(id).style.display="block";
-update();
+  document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+  update();
 }
 
 function toggleDark(){ document.body.classList.toggle("dark"); }
 
 function signup(){
-let users=JSON.parse(localStorage.getItem("users"))||[];
-users.push({email:signupEmail.value,pass:signupPass.value});
-localStorage.setItem("users",JSON.stringify(users));
-alert("Account created");
+  let users=JSON.parse(localStorage.getItem("users"))||[];
+  users.push({email:signupEmail.value,pass:signupPass.value});
+  localStorage.setItem("users",JSON.stringify(users));
+  alert("Account created");
 }
 
 function login(){
-let users=JSON.parse(localStorage.getItem("users"))||[];
-let u=users.find(x=>x.email==loginEmail.value && x.pass==loginPass.value);
-if(u){ show("dashboard"); } else alert("Invalid");
+  let users=JSON.parse(localStorage.getItem("users"))||[];
+  let u=users.find(x=>x.email==loginEmail.value && x.pass==loginPass.value);
+  if(u){ show("dashboard"); } else alert("Invalid");
 }
 
-/* DONATE */
 function donate(){
-let name=donorName.value;
-let amount=Number(donationAmount.value);
+  let name=donorName.value.trim();
+  let amount=Number(donationAmount.value);
 
-let data=JSON.parse(localStorage.getItem("donations"))||[];
-let volunteers=Number(localStorage.getItem("volunteers"))||120;
+  if(!name || amount<=0) return alert("Enter valid details");
 
-data.push({name,amount,date:new Date().toLocaleString()});
-volunteers++;
+  let data=JSON.parse(localStorage.getItem("donations"))||[];
+  let volunteers=Number(localStorage.getItem("volunteers"))||120;
 
-localStorage.setItem("donations",JSON.stringify(data));
-localStorage.setItem("volunteers",volunteers);
+  data.push({name,amount,date:new Date().toLocaleString()});
+  volunteers++;
 
-alert(`Thank you ${name} ❤️`);
+  localStorage.setItem("donations",JSON.stringify(data));
+  localStorage.setItem("volunteers",volunteers);
 
-update();
+  alert(`Thank you ${name} ❤️`);
+
+  update();
 }
 
-/* UPDATE */
 function update(){
-let data=JSON.parse(localStorage.getItem("donations"))||[];
-let volunteers=Number(localStorage.getItem("volunteers"))||120;
+  let data=JSON.parse(localStorage.getItem("donations"))||[];
+  let volunteers=Number(localStorage.getItem("volunteers"))||120;
 
-let total=data.reduce((s,d)=>s+d.amount,0);
-let lives=Math.floor(total/500000);
+  let total=data.reduce((s,d)=>s+(d.amount||0),0);
+  let lives=Math.floor(total/500000);
 
-funds.innerText="₹"+total;
-document.getElementById("lives").innerText=lives;
-document.getElementById("volunteers").innerText=volunteers;
+  document.getElementById("funds").innerText="₹"+total;
+  document.getElementById("lives").innerText=lives;
+  document.getElementById("volunteers").innerText=volunteers;
 
-homeFunds.innerText=total;
-homeVolunteers.innerText=volunteers;
+  document.getElementById("homeFunds").innerText=total;
+  document.getElementById("homeVolunteers").innerText=volunteers;
 
-let goal=10000;
-let percent=(lives/goal)*100;
-homeProgressBar.style.width=percent+"%";
-homeGoalText.innerText=`${lives} / ${goal} Lives`;
+  let goal=10000;
+  let percent=Math.min((lives/goal)*100,100);
+  document.getElementById("homeProgressBar").style.width=percent+"%";
+  document.getElementById("homeGoalText").innerText=`${lives} / ${goal} Lives`;
 
-let top=[...data].sort((a,b)=>b.amount-a.amount).slice(0,3);
-topDonors.innerHTML="";
-top.forEach((d,i)=>{
-let li=document.createElement("li");
-li.innerText=`${["🥇","🥈","🥉"][i]} ${d.name} - ₹${d.amount}`;
-topDonors.appendChild(li);
-});
+  let top=[...data].sort((a,b)=>b.amount-a.amount).slice(0,3);
+  let list=document.getElementById("topDonors");
+  list.innerHTML="";
+  top.forEach((d,i)=>{
+    let li=document.createElement("li");
+    li.innerText=`${["🥇","🥈","🥉"][i]} ${d.name} - ₹${d.amount}`;
+    list.appendChild(li);
+  });
 
-/* HISTORY */
-history.innerHTML="";
-data.slice().reverse().forEach(d=>{
-let div=document.createElement("div");
-div.className="history-item";
-div.innerHTML=`<span>${d.name}</span><span>₹${d.amount}</span><span>${d.date}</span>`;
-history.appendChild(div);
-});
+  let history=document.getElementById("history");
+  history.innerHTML="";
+  data.slice().reverse().forEach(d=>{
+    let div=document.createElement("div");
+    div.className="history-item";
+    div.innerHTML=`<span>${d.name}</span><span>₹${d.amount}</span><span>${d.date}</span>`;
+    history.appendChild(div);
+  });
 }
 
 update();
