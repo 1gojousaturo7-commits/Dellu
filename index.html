@@ -7,6 +7,9 @@
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 
+<!-- ICONS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
 <style>
 :root {
   --bg: linear-gradient(135deg, #e8f5e9, #c8e6c9);
@@ -27,35 +30,64 @@ body {
   color:var(--text);
 }
 
-.section { display:none; padding:40px; }
-.active { display:block; }
-
-/* NAV */
-nav {
+/* SIDEBAR */
+.sidebar {
+  position:fixed;
+  top:0;
+  left:0;
+  height:100vh;
+  width:220px;
+  background:rgba(0,0,0,0.05);
   display:flex;
-  justify-content:space-between;
-  padding:15px 40px;
-  background:var(--card);
+  flex-direction:column;
+  align-items:center;
+  padding-top:20px;
+  gap:15px;
 }
+
+.sidebar h2 {
+  margin-bottom:20px;
+}
+
+.sidebar button {
+  width:85%;
+  padding:12px;
+  border:none;
+  border-radius:12px;
+  background:#43a047;
+  color:white;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  justify-content:center;
+  cursor:pointer;
+  transition:0.3s;
+}
+
+.sidebar button:hover {
+  background:#2e7d32;
+  transform:scale(1.05);
+}
+
+/* SHIFT CONTENT */
+.main {
+  margin-left:220px;
+  padding:40px;
+}
+
+/* SECTIONS */
+.section { display:none; }
+.active { display:block; }
 
 /* HERO */
 .split-hero {
   display:flex;
   justify-content:space-between;
-  align-items:center;
   gap:40px;
 }
 
 .hero-left h1 {
   font-size:3rem;
-}
-
-.hero-left button {
-  background:#43a047;
-  color:white;
-  padding:12px 25px;
-  border:none;
-  border-radius:10px;
 }
 
 /* GLASS */
@@ -81,7 +113,6 @@ nav {
   background:var(--card);
 }
 
-/* INPUT */
 input {
   width:100%;
   padding:12px;
@@ -90,7 +121,7 @@ input {
   border:1px solid #ccc;
 }
 
-/* PASSWORD TOGGLE */
+/* PASSWORD */
 .pass-box {
   position:relative;
 }
@@ -104,13 +135,11 @@ input {
 
 /* BUTTON */
 button {
-  width:100%;
   padding:12px;
   background:#43a047;
   color:white;
   border:none;
   border-radius:10px;
-  margin-top:10px;
 }
 
 /* DASHBOARD */
@@ -142,8 +171,8 @@ button {
   border-bottom:1px solid #ccc;
 }
 
-/* TOP DONOR */
-.gold { color:gold; font-weight:bold; }
+/* DONOR COLORS */
+.gold { color:gold; }
 .silver { color:silver; }
 .bronze { color:#cd7f32; }
 
@@ -152,49 +181,41 @@ button {
 
 <body>
 
-<nav>
-  <h2>NGO 🌿</h2>
-  <div>
-    <button onclick="show('home')">Home</button>
-    <button onclick="show('login')">Login</button>
-    <button onclick="show('signup')">Signup</button>
-    <button onclick="show('profile')">Profile</button>
-    <button onclick="toggleDark()">🌙</button>
-  </div>
-</nav>
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <h2>🌿 NGO</h2>
 
-<!-- HOME (RESTORED 🔥) -->
+  <button onclick="show('home')"><i class="fas fa-home"></i> Home</button>
+  <button onclick="show('login')"><i class="fas fa-sign-in-alt"></i> Login</button>
+  <button onclick="show('signup')"><i class="fas fa-user-plus"></i> Signup</button>
+  <button onclick="show('profile')"><i class="fas fa-user"></i> Profile</button>
+  <button onclick="toggleDark()"><i class="fas fa-moon"></i> Dark</button>
+</div>
+
+<div class="main">
+
+<!-- HOME -->
 <div id="home" class="section active">
 
-  <div class="split-hero">
-
-    <!-- LEFT -->
-    <div class="hero-left">
-      <h1>Make a Difference 🌍</h1>
-      <p>Together we can change lives</p>
-      <button onclick="show('signup')">Get Started</button>
-    </div>
-
-    <!-- RIGHT -->
-    <div class="glass">
-      <h3>🌿 Impact Overview</h3>
-      <p><strong>Funds:</strong> ₹<span id="homeFunds">0</span></p>
-      <p><strong>Volunteers:</strong> <span id="homeVolunteers">120</span></p>
-
-      <h4>🏆 Top Donors</h4>
-      <ol id="topDonors"></ol>
-    </div>
-
+<div class="split-hero">
+  <div class="hero-left">
+    <h1>Make a Difference 🌍</h1>
+    <button onclick="show('signup')">Get Started</button>
   </div>
 
-  <!-- GOAL -->
   <div class="glass">
-    <h3>🎯 Goal: 10,000 Lives</h3>
-    <p id="homeGoalText"></p>
-    <div class="progress">
-      <div id="homeProgressBar" class="progress-bar"></div>
-    </div>
+    <h3>Impact</h3>
+    <p>Funds: ₹<span id="homeFunds">0</span></p>
+    <p>Volunteers: <span id="homeVolunteers">120</span></p>
+    <ol id="topDonors"></ol>
   </div>
+</div>
+
+<div class="glass">
+  <h3>Goal: 10,000 Lives</h3>
+  <p id="homeGoalText"></p>
+  <div class="progress"><div id="homeProgressBar" class="progress-bar"></div></div>
+</div>
 
 </div>
 
@@ -204,13 +225,10 @@ button {
 <div class="auth-box">
 
 <h2>Login</h2>
+<input id="loginEmail" placeholder="Username">
 
-<label>Username</label>
-<input id="loginEmail">
-
-<label>Password</label>
 <div class="pass-box">
-<input id="loginPass" type="password">
+<input id="loginPass" type="password" placeholder="Password">
 <span onclick="togglePass('loginPass')">👁️</span>
 </div>
 
@@ -226,13 +244,10 @@ button {
 <div class="auth-box">
 
 <h2>Signup</h2>
+<input id="signupEmail" placeholder="Username">
 
-<label>Username</label>
-<input id="signupEmail">
-
-<label>Password</label>
 <div class="pass-box">
-<input id="signupPass" type="password">
+<input id="signupPass" type="password" placeholder="Password">
 <span onclick="togglePass('signupPass')">👁️</span>
 </div>
 
@@ -252,14 +267,14 @@ button {
 </div>
 
 <div class="glass">
-<h3>💳 Donate</h3>
+<h3>Donate</h3>
 <input id="donorName" placeholder="Name">
 <input id="donationAmount" type="number" placeholder="Amount">
 <button onclick="donate()">Donate</button>
 </div>
 
 <div class="glass">
-<h3>📜 Donation History</h3>
+<h3>Donation History</h3>
 <div id="history"></div>
 </div>
 
@@ -268,11 +283,13 @@ button {
 <!-- PROFILE -->
 <div id="profile" class="section">
 <div class="glass">
-<h2>👤 Profile</h2>
-<p><strong>Username:</strong> <span id="profileName"></span></p>
-<p><strong>Total Donations:</strong> ₹<span id="profileFunds"></span></p>
-<p><strong>Lives Impacted:</strong> <span id="profileLives"></span></p>
+<h2>Profile</h2>
+<p>Username: <span id="profileName"></span></p>
+<p>Total Donations: ₹<span id="profileFunds"></span></p>
+<p>Lives: <span id="profileLives"></span></p>
 </div>
+</div>
+
 </div>
 
 <script>
@@ -282,7 +299,9 @@ function show(id){
   update();
 }
 
-function toggleDark(){ document.body.classList.toggle("dark"); }
+function toggleDark(){
+  document.body.classList.toggle("dark");
+}
 
 function togglePass(id){
   let input=document.getElementById(id);
@@ -299,6 +318,7 @@ function signup(){
 function login(){
   let users=JSON.parse(localStorage.getItem("users"))||[];
   let u=users.find(x=>x.email==loginEmail.value && x.pass==loginPass.value);
+
   if(u){
     localStorage.setItem("currentUser",u.email);
     show("dashboard");
