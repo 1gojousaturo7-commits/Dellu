@@ -3,31 +3,76 @@
 <head>
   <title>DELLU NGO System</title>
   <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    /* Background grid */
+    body {
+      background-color: #0b0f1a;
+      background-image: 
+        linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px);
+      background-size: 40px 40px;
+    }
+  </style>
 </head>
 
-<body class="bg-gradient-to-br from-gray-900 to-black text-white min-h-screen flex items-center justify-center">
+<body class="text-white min-h-screen flex items-center justify-center">
 
-<!-- LOGIN / SIGNUP -->
-<div id="authPage" class="bg-gray-800 p-8 rounded-2xl shadow-lg w-80">
-  <h2 class="text-2xl font-bold mb-4 text-center">🔐 DELLU</h2>
+<!-- LOGIN PAGE -->
+<div id="authPage" class="flex items-center justify-center w-full">
 
-  <input id="email" placeholder="Email" class="w-full p-2 text-black mb-3 rounded">
-  <input id="password" type="password" placeholder="Password" class="w-full p-2 text-black mb-3 rounded">
+  <div class="bg-[#121826] p-8 rounded-2xl shadow-2xl w-96 border border-gray-700">
 
-  <button onclick="login()" class="w-full bg-blue-500 py-2 rounded mb-2">Login</button>
+    <h2 class="text-2xl font-semibold text-center mb-6">Log In</h2>
 
-  <button onclick="signup()" class="w-full bg-green-500 py-2 rounded mb-2">Sign Up</button>
+    <!-- EMAIL -->
+    <label class="text-gray-400 text-sm">Email</label>
+    <div class="relative mt-1 mb-4">
+      <span class="absolute left-3 top-3 text-gray-400">📧</span>
+      <input id="email" type="email" placeholder="you@example.com"
+        class="w-full pl-10 p-3 rounded-lg bg-[#0b0f1a] text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-green-400">
+    </div>
 
-  <button class="w-full bg-red-500 py-2 rounded">Login with Google</button>
+    <!-- PASSWORD -->
+    <label class="text-gray-400 text-sm">Password</label>
+    <div class="relative mt-1 mb-6">
+      <span class="absolute left-3 top-3 text-gray-400">🔒</span>
+      <input id="password" type="password" placeholder="••••••••"
+        class="w-full pl-10 pr-10 p-3 rounded-lg bg-[#0b0f1a] text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-green-400">
 
-  <p id="error" class="text-red-400 mt-2 text-sm"></p>
+      <!-- Eye toggle -->
+      <span onclick="togglePassword()" class="absolute right-3 top-3 cursor-pointer text-gray-400">
+        👁
+      </span>
+    </div>
+
+    <!-- BUTTON -->
+    <button onclick="login()"
+      class="w-full bg-green-500 py-3 rounded-lg font-semibold hover:bg-green-600 transition duration-200 shadow-lg">
+      Log In
+    </button>
+
+    <!-- SIGNUP -->
+    <p class="text-gray-400 text-sm text-center mt-4">
+      Don’t have an account?
+      <span onclick="signup()" class="text-green-400 cursor-pointer hover:underline">
+        Create an account
+      </span>
+    </p>
+
+    <!-- FOOTER -->
+    <p class="text-gray-600 text-xs text-center mt-6 tracking-widest">
+      DELLU • NGO MANAGEMENT SYSTEM
+    </p>
+
+  </div>
 </div>
 
-<!-- MAIN APP -->
+<!-- DASHBOARD -->
 <div id="app" class="hidden w-full p-10">
 
   <h1 class="text-3xl font-bold mb-2">🌐 DELLU Dashboard</h1>
-  <p id="welcome" class="mb-6 text-gray-300"></p>
+  <p id="welcome" class="mb-6 text-gray-400"></p>
 
   <!-- NAV -->
   <div class="flex gap-4 mb-6">
@@ -60,19 +105,16 @@
 </div>
 
 <script>
-  // LOAD SAVED DATA
   let donations = JSON.parse(localStorage.getItem("donations")) || [];
 
-  // SIGNUP
   function signup() {
     const email = document.getElementById("email").value;
     const pass = document.getElementById("password").value;
 
     localStorage.setItem("user", JSON.stringify({ email, pass }));
-    alert("Account created! Now login.");
+    alert("Account created!");
   }
 
-  // LOGIN
   function login() {
     const email = document.getElementById("email").value;
     const pass = document.getElementById("password").value;
@@ -80,43 +122,34 @@
     const user = JSON.parse(localStorage.getItem("user"));
 
     if(user && user.email === email && user.pass === pass) {
-      startApp(email);
+      document.getElementById("authPage").classList.add("hidden");
+      document.getElementById("app").classList.remove("hidden");
+      document.getElementById("welcome").innerText = "Welcome, " + email;
+      render();
     } else {
-      document.getElementById("error").innerText = "Invalid login";
+      alert("Invalid login");
     }
-  }
-
-  function startApp(email) {
-    document.getElementById("authPage").classList.add("hidden");
-    document.getElementById("app").classList.remove("hidden");
-    document.getElementById("welcome").innerText = "Welcome, " + email;
-    render();
   }
 
   function logout() {
     location.reload();
   }
 
-  // NAV
   function show(section) {
     document.querySelectorAll(".section").forEach(s => s.classList.add("hidden"));
     document.getElementById(section).classList.remove("hidden");
   }
 
-  // ADD DONATION
   function addDonation() {
     const name = document.getElementById("name").value;
     const amount = document.getElementById("amount").value;
     const usage = document.getElementById("usage").value;
 
     donations.push({ name, amount, usage });
-
     localStorage.setItem("donations", JSON.stringify(donations));
-
     render();
   }
 
-  // RENDER DATA
   function render() {
     const list = document.getElementById("list");
 
@@ -128,16 +161,19 @@
     ).join("");
   }
 
-  // AI DEMO
   function fakeAI() {
     const q = document.getElementById("question").value;
-
     let res = "I can help with NGO tasks.";
 
     if(q.includes("donation")) res = "Check transparency section.";
-    if(q.includes("volunteer")) res = "Volunteers can join events.";
+    if(q.includes("volunteer")) res = "Volunteers can help NGOs.";
 
     document.getElementById("aiResponse").innerText = res;
+  }
+
+  function togglePassword() {
+    const pass = document.getElementById("password");
+    pass.type = pass.type === "password" ? "text" : "password";
   }
 </script>
 
