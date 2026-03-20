@@ -25,7 +25,6 @@ body {
   font-family: 'Poppins';
   background: var(--bg);
   color: var(--text);
-  overflow-x: hidden;
 }
 
 /* NAV */
@@ -41,12 +40,10 @@ nav {
 .split-hero {
   display: flex;
   justify-content: space-between;
-  align-items: center;
   padding: 80px 60px;
   gap: 40px;
 }
 
-.hero-left { flex:1; }
 .hero-left h1 { font-size: 3rem; }
 
 .hero-left button {
@@ -57,21 +54,13 @@ nav {
   border-radius:10px;
 }
 
-.hero-right {
-  flex:1;
-  max-width:400px;
-}
-
-/* SECTIONS */
-.section { display:none; padding:40px; }
-.active { display:block; }
-
 /* GLASS */
 .glass {
   background: var(--card);
   backdrop-filter: blur(12px);
   border-radius: 15px;
   padding: 20px;
+  margin-top:20px;
 }
 
 /* AUTH */
@@ -91,13 +80,13 @@ input {
 }
 
 /* BUTTON */
-button.main {
-  width:100%;
+button.main, button {
   background:#43a047;
   color:white;
-  padding:12px;
+  padding:10px;
   border:none;
   border-radius:8px;
+  cursor:pointer;
 }
 
 /* DASHBOARD */
@@ -111,7 +100,9 @@ button.main {
   padding:20px;
   border-radius:15px;
   color:white;
+  transition:0.3s;
 }
+.card:hover { transform: scale(1.05); }
 
 .card:nth-child(1){background:#43a047;}
 .card:nth-child(2){background:#2e7d32;}
@@ -119,52 +110,26 @@ button.main {
 .card:nth-child(4){background:#388e3c;}
 
 /* PROGRESS */
-.progress {
-  background:#ddd;
-  border-radius:10px;
-  overflow:hidden;
+.progress { background:#ddd; border-radius:10px; overflow:hidden; }
+.progress-bar { height:20px; background:#43a047; width:0%; }
+
+/* DONOR GLOW */
+.gold { color: gold; text-shadow:0 0 10px gold; }
+.silver { color:silver; }
+.bronze { color:#cd7f32; }
+
+/* HISTORY */
+.history-item {
+  display:flex;
+  justify-content:space-between;
+  padding:10px;
+  border-bottom:1px solid #ccc;
+  transition:0.3s;
 }
-.progress-bar {
-  height:20px;
-  background:#43a047;
-  width:0%;
+.history-item:hover {
+  background:rgba(0,0,0,0.05);
 }
 
-/* GLOW DONOR */
-.gold {
-  color: gold;
-  font-weight: bold;
-  text-shadow: 0 0 8px gold, 0 0 15px gold;
-  animation: glow 1.5s infinite alternate;
-}
-.silver { color: silver; font-weight:bold; }
-.bronze { color: #cd7f32; font-weight:bold; }
-
-@keyframes glow {
-  from { text-shadow: 0 0 5px gold; }
-  to { text-shadow: 0 0 20px gold; }
-}
-
-/* CONFETTI */
-.confetti {
-  position: fixed;
-  width: 10px;
-  height: 10px;
-  top: 0;
-  animation: fall linear forwards;
-}
-
-@keyframes fall {
-  to {
-    transform: translateY(100vh) rotate(360deg);
-    opacity: 0;
-  }
-}
-
-/* MOBILE */
-@media (max-width: 768px) {
-  .split-hero { flex-direction: column; text-align:center; }
-}
 </style>
 </head>
 
@@ -177,7 +142,6 @@ button.main {
     <button onclick="show('login')">Login</button>
     <button onclick="show('signup')">Signup</button>
     <button onclick="toggleDark()">🌙</button>
-    <button onclick="logout()">Logout</button>
   </div>
 </nav>
 
@@ -192,12 +156,10 @@ button.main {
       <button onclick="show('signup')">Get Started</button>
     </div>
 
-    <div class="hero-right glass">
+    <div class="glass">
       <h3>🌿 Impact Overview</h3>
-      <p><strong>Funds:</strong> ₹<span id="homeFunds">0</span></p>
-      <p><strong>Volunteers:</strong> <span id="homeVolunteers">120</span></p>
-
-      <h4>🏆 Top Donors</h4>
+      <p>Funds: ₹<span id="homeFunds">0</span></p>
+      <p>Volunteers: <span id="homeVolunteers">120</span></p>
       <ol id="topDonors"></ol>
     </div>
 
@@ -205,187 +167,150 @@ button.main {
 
   <div class="glass">
     <h3>🎯 Goal: 10,000 Lives</h3>
-    <p id="homeGoalText">0 / 10,000 Lives</p>
-    <div class="progress">
-      <div id="homeProgressBar" class="progress-bar"></div>
-    </div>
+    <p id="homeGoalText"></p>
+    <div class="progress"><div id="homeProgressBar" class="progress-bar"></div></div>
   </div>
 
 </div>
 
 <!-- LOGIN -->
 <div id="login" class="section">
-  <div class="auth-container">
-    <div class="glass auth-box">
-      <h2>Welcome Back 🌿</h2>
+<div class="auth-container">
+<div class="glass auth-box">
+<h2>Login</h2>
 
-      <label>Username</label>
-      <input id="loginEmail" placeholder="Enter your username">
+<label>Username</label>
+<input id="loginEmail">
 
-      <label>Password</label>
-      <input id="loginPass" type="password" placeholder="Enter your password">
+<label>Password</label>
+<input id="loginPass" type="password">
 
-      <button class="main" onclick="login()">Login</button>
-    </div>
-  </div>
+<button onclick="login()">Login</button>
+</div>
+</div>
 </div>
 
 <!-- SIGNUP -->
 <div id="signup" class="section">
-  <div class="auth-container">
-    <div class="glass auth-box">
-      <h2>Create Account 🌱</h2>
+<div class="auth-container">
+<div class="glass auth-box">
+<h2>Signup</h2>
 
-      <label>Username</label>
-      <input id="signupEmail" placeholder="Choose a username">
+<label>Username</label>
+<input id="signupEmail">
 
-      <label>Password</label>
-      <input id="signupPass" type="password" placeholder="Create a password">
+<label>Password</label>
+<input id="signupPass" type="password">
 
-      <button class="main" onclick="signup()">Signup</button>
-    </div>
-  </div>
+<button onclick="signup()">Signup</button>
+</div>
+</div>
 </div>
 
 <!-- DASHBOARD -->
 <div id="dashboard" class="section">
 
-  <div class="cards">
-    <div class="card"><h3 id="funds">₹0</h3><p>Funds</p></div>
-    <div class="card"><h3 id="volunteers">120</h3><p>Volunteers</p></div>
-    <div class="card"><h3>35</h3><p>Campaigns</p></div>
-    <div class="card"><h3 id="lives">0</h3><p>Lives</p></div>
-  </div>
+<div class="cards">
+<div class="card"><h3 id="funds">₹0</h3><p>Funds</p></div>
+<div class="card"><h3 id="volunteers">120</h3><p>Volunteers</p></div>
+<div class="card"><h3 id="lives">0</h3><p>Lives</p></div>
+</div>
 
-  <div class="glass">
-    <h3>🎯 Goal: 10,000 Lives</h3>
-    <p id="goalText">0 / 10,000 Lives</p>
-    <div class="progress">
-      <div id="progressBar" class="progress-bar"></div>
-    </div>
-  </div>
+<div class="glass">
+<h3>💳 Donate</h3>
+<input id="donorName" placeholder="Name">
+<input id="donationAmount" type="number" placeholder="Amount">
+<button onclick="donate()">Donate</button>
+</div>
 
-  <div class="glass">
-    <h3>💳 Donate</h3>
-    <input id="donorName" placeholder="Name">
-    <input id="donationAmount" type="number" placeholder="Amount">
-    <button onclick="donate()">Donate</button>
-  </div>
+<!-- 🔥 NEW HISTORY -->
+<div class="glass">
+<h3>📜 Donation History</h3>
+<div id="history"></div>
+</div>
 
 </div>
 
 <script>
 function show(id){
-  document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
-  document.getElementById(id).classList.add("active");
-  updateDashboard();
+document.querySelectorAll(".section").forEach(s=>s.style.display="none");
+document.getElementById(id).style.display="block";
+update();
 }
 
-function toggleDark(){
-  document.body.classList.toggle("dark");
-}
+function toggleDark(){ document.body.classList.toggle("dark"); }
 
 function signup(){
-  let users=JSON.parse(localStorage.getItem("users"))||[];
-  users.push({email:signupEmail.value,pass:signupPass.value});
-  localStorage.setItem("users",JSON.stringify(users));
-  alert("Account created!");
+let users=JSON.parse(localStorage.getItem("users"))||[];
+users.push({email:signupEmail.value,pass:signupPass.value});
+localStorage.setItem("users",JSON.stringify(users));
+alert("Account created");
 }
 
 function login(){
-  let users=JSON.parse(localStorage.getItem("users"))||[];
-  let user=users.find(u=>u.email==loginEmail.value && u.pass==loginPass.value);
-
-  if(user){
-    localStorage.setItem("loggedIn",true);
-    show("dashboard");
-  } else alert("Invalid login");
-}
-
-function logout(){
-  localStorage.removeItem("loggedIn");
-  show("home");
-}
-
-/* CONFETTI */
-function launchConfetti(){
-  for(let i=0;i<100;i++){
-    let conf=document.createElement("div");
-    conf.className="confetti";
-    conf.style.left=Math.random()*100+"vw";
-    conf.style.background=`hsl(${Math.random()*360},100%,50%)`;
-    conf.style.animationDuration=(Math.random()*2+2)+"s";
-    document.body.appendChild(conf);
-    setTimeout(()=>conf.remove(),3000);
-  }
+let users=JSON.parse(localStorage.getItem("users"))||[];
+let u=users.find(x=>x.email==loginEmail.value && x.pass==loginPass.value);
+if(u){ show("dashboard"); } else alert("Invalid");
 }
 
 /* DONATE */
 function donate(){
-  let name=donorName.value.trim();
-  let amount=Number(donationAmount.value);
+let name=donorName.value;
+let amount=Number(donationAmount.value);
 
-  if(!name || amount<=0) return alert("Enter valid details");
+let data=JSON.parse(localStorage.getItem("donations"))||[];
+let volunteers=Number(localStorage.getItem("volunteers"))||120;
 
-  let donations=JSON.parse(localStorage.getItem("donations"))||[];
-  let volunteers=Number(localStorage.getItem("volunteers"))||120;
+data.push({name,amount,date:new Date().toLocaleString()});
+volunteers++;
 
-  donations.push({name,amount});
-  volunteers++;
+localStorage.setItem("donations",JSON.stringify(data));
+localStorage.setItem("volunteers",volunteers);
 
-  localStorage.setItem("donations",JSON.stringify(donations));
-  localStorage.setItem("volunteers",volunteers);
+alert(`Thank you ${name} ❤️`);
 
-  launchConfetti();
-
-  alert(`Thank you volunteer ${name} for your support ❤️`);
-
-  donorName.value="";
-  donationAmount.value="";
-
-  updateDashboard();
+update();
 }
 
 /* UPDATE */
-function updateDashboard(){
-  let donations=JSON.parse(localStorage.getItem("donations"))||[];
-  let volunteers=Number(localStorage.getItem("volunteers"))||120;
+function update(){
+let data=JSON.parse(localStorage.getItem("donations"))||[];
+let volunteers=Number(localStorage.getItem("volunteers"))||120;
 
-  let total=donations.reduce((s,d)=>s+Number(d.amount||0),0);
-  let livesCount=Math.floor(total/500000);
-  let goal=10000;
+let total=data.reduce((s,d)=>s+d.amount,0);
+let lives=Math.floor(total/500000);
 
-  funds.innerText="₹"+total;
-  lives.innerText=livesCount;
-  document.getElementById("volunteers").innerText=volunteers;
+funds.innerText="₹"+total;
+document.getElementById("lives").innerText=lives;
+document.getElementById("volunteers").innerText=volunteers;
 
-  homeFunds.innerText=total;
-  homeVolunteers.innerText=volunteers;
+homeFunds.innerText=total;
+homeVolunteers.innerText=volunteers;
 
-  let percent=Math.min((livesCount/goal)*100,100);
-  progressBar.style.width=percent+"%";
-  homeProgressBar.style.width=percent+"%";
+let goal=10000;
+let percent=(lives/goal)*100;
+homeProgressBar.style.width=percent+"%";
+homeGoalText.innerText=`${lives} / ${goal} Lives`;
 
-  goalText.innerText=`${livesCount} / ${goal}`;
-  homeGoalText.innerText=`${livesCount} / ${goal}`;
+let top=[...data].sort((a,b)=>b.amount-a.amount).slice(0,3);
+topDonors.innerHTML="";
+top.forEach((d,i)=>{
+let li=document.createElement("li");
+li.innerText=`${["🥇","🥈","🥉"][i]} ${d.name} - ₹${d.amount}`;
+topDonors.appendChild(li);
+});
 
-  let top=[...donations].sort((a,b)=>b.amount-a.amount).slice(0,3);
-  topDonors.innerHTML="";
-
-  top.forEach((d,i)=>{
-    let li=document.createElement("li");
-    let medal=i==0?"🥇":i==1?"🥈":"🥉";
-
-    if(i==0) li.classList.add("gold");
-    if(i==1) li.classList.add("silver");
-    if(i==2) li.classList.add("bronze");
-
-    li.innerText=`${medal} ${d.name} - ₹${d.amount}`;
-    topDonors.appendChild(li);
-  });
+/* HISTORY */
+history.innerHTML="";
+data.slice().reverse().forEach(d=>{
+let div=document.createElement("div");
+div.className="history-item";
+div.innerHTML=`<span>${d.name}</span><span>₹${d.amount}</span><span>${d.date}</span>`;
+history.appendChild(div);
+});
 }
 
-updateDashboard();
+update();
 </script>
 
 </body>
