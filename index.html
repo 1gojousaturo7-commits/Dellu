@@ -64,38 +64,32 @@ nav button {
   backdrop-filter: blur(12px);
   border-radius: 15px;
   padding: 25px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
 }
 
-/* LOGIN / SIGNUP CENTERED */
+/* AUTH */
 .auth-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 70vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:70vh;
 }
 
-.auth-box {
-  width: 350px;
-}
+.auth-box { width:350px; }
 
-/* INPUT */
 input {
-  width: 100%;
-  margin: 10px 0;
-  padding: 12px;
-  border-radius: 8px;
-  border: 1px solid #c8e6c9;
+  width:100%;
+  margin:10px 0;
+  padding:12px;
 }
 
 /* BUTTON */
 button.main {
-  width: 100%;
-  background: #43a047;
-  color: white;
-  padding: 12px;
-  border: none;
-  border-radius: 8px;
+  width:100%;
+  background:#43a047;
+  color:white;
+  padding:12px;
+  border:none;
+  border-radius:8px;
 }
 
 /* CARDS */
@@ -122,6 +116,7 @@ button.main {
   border-radius:10px;
   overflow:hidden;
 }
+
 .progress-bar {
   height:20px;
   background:#43a047;
@@ -137,6 +132,7 @@ ul { list-style:none; padding:0; }
   grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
   gap:20px;
 }
+
 .campaign img {
   width:100%;
   height:150px;
@@ -219,7 +215,8 @@ ul { list-style:none; padding:0; }
   </div>
 
   <div class="glass">
-    <h3>🎯 Goal (₹100000)</h3>
+    <h3>🎯 Goal: 10,000 Lives</h3>
+    <p id="goalText">0 / 10,000 Lives</p>
     <div class="progress">
       <div id="progressBar" class="progress-bar"></div>
     </div>
@@ -305,15 +302,16 @@ function updateDashboard(){
 
   let total=donations.reduce((sum,d)=>sum+Number(d.amount||0),0);
 
-  // 🔥 NEW LOGIC: 1 LIFE per 500000
   let livesCount=Math.floor(total/500000);
+  let goal=10000;
 
   funds.innerText="₹"+total;
   document.getElementById("lives").innerText=livesCount;
   document.getElementById("volunteers").innerText=volunteers;
 
-  let percent=Math.min((total/100000)*100,100);
+  let percent=Math.min((livesCount/goal)*100,100);
   progressBar.style.width=percent+"%";
+  goalText.innerText=`${livesCount} / ${goal} Lives`;
 
   let sorted=[...donations].sort((a,b)=>b.amount-a.amount);
   donorList.innerHTML="";
