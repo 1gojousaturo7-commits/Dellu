@@ -27,17 +27,12 @@ body {
   color: var(--text);
 }
 
-/* NAV */
 nav {
   display: flex;
   justify-content: space-between;
   padding: 15px 40px;
   background: var(--card);
   backdrop-filter: blur(10px);
-}
-
-nav button {
-  margin-left: 10px;
 }
 
 /* HERO */
@@ -63,7 +58,8 @@ nav button {
   background: var(--card);
   backdrop-filter: blur(12px);
   border-radius: 15px;
-  padding: 25px;
+  padding: 20px;
+  margin-top: 20px;
 }
 
 /* AUTH */
@@ -123,9 +119,6 @@ button.main {
   width:0%;
 }
 
-/* LIST */
-ul { list-style:none; padding:0; }
-
 /* CAMPAIGNS */
 .campaigns {
   display:grid;
@@ -162,6 +155,15 @@ ul { list-style:none; padding:0; }
     <button onclick="show('signup')">Get Started</button>
   </div>
 
+  <!-- 🔥 NEW GOAL SECTION -->
+  <div class="glass">
+    <h3>🎯 Goal: 10,000 Lives</h3>
+    <p id="homeGoalText">0 / 10,000 Lives</p>
+    <div class="progress">
+      <div id="homeProgressBar" class="progress-bar"></div>
+    </div>
+  </div>
+
   <div class="campaigns">
     <div class="campaign">
       <img src="https://images.unsplash.com/photo-1524492412937-b28074a5d7da">
@@ -173,8 +175,9 @@ ul { list-style:none; padding:0; }
       <p>Education for All</p>
     </div>
 
+    <!-- ✅ NEW FOOD IMAGE -->
     <div class="campaign">
-      <img src="https://images.unsplash.com/photo-1606788075761-8a3b3d1a2f6c">
+      <img src="https://images.unsplash.com/photo-1593113630400-ea4288922497">
       <p>Food Donation Drive</p>
     </div>
   </div>
@@ -186,7 +189,7 @@ ul { list-style:none; padding:0; }
     <div class="glass auth-box">
       <h2>Welcome Back 🌿</h2>
       <input id="loginEmail" placeholder="Email">
-      <input id="loginPass" type="password" placeholder="Password">
+      <input id="loginPass" type="password">
       <button class="main" onclick="login()">Login</button>
     </div>
   </div>
@@ -197,8 +200,8 @@ ul { list-style:none; padding:0; }
   <div class="auth-container">
     <div class="glass auth-box">
       <h2>Create Account 🌱</h2>
-      <input id="signupEmail" placeholder="Email">
-      <input id="signupPass" type="password" placeholder="Password">
+      <input id="signupEmail">
+      <input id="signupPass" type="password">
       <button class="main" onclick="signup()">Signup</button>
     </div>
   </div>
@@ -240,13 +243,13 @@ ul { list-style:none; padding:0; }
 function show(id){
   document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
   document.getElementById(id).classList.add("active");
+  updateDashboard(); // 🔥 update home + dashboard
 }
 
 function toggleDark(){
   document.body.classList.toggle("dark");
 }
 
-/* SIGNUP */
 function signup(){
   let users=JSON.parse(localStorage.getItem("users"))||[];
   users.push({email:signupEmail.value,pass:signupPass.value});
@@ -254,7 +257,6 @@ function signup(){
   alert("Account created!");
 }
 
-/* LOGIN */
 function login(){
   let users=JSON.parse(localStorage.getItem("users"))||[];
   let user=users.find(u=>u.email==loginEmail.value && u.pass==loginPass.value);
@@ -262,7 +264,6 @@ function login(){
   if(user){
     localStorage.setItem("loggedIn",true);
     show("dashboard");
-    updateDashboard();
   } else alert("Invalid login");
 }
 
@@ -271,7 +272,6 @@ function logout(){
   show("home");
 }
 
-/* DONATE */
 function donate(){
   let name=donorName.value.trim();
   let amount=Number(donationAmount.value);
@@ -287,31 +287,32 @@ function donate(){
   localStorage.setItem("donations",JSON.stringify(donations));
   localStorage.setItem("volunteers",volunteers);
 
-  updateDashboard();
-
   donorName.value="";
   donationAmount.value="";
 
   alert(`Thank you volunteer ${name} for your support ❤️`);
+  updateDashboard();
 }
 
-/* UPDATE */
 function updateDashboard(){
   let donations=JSON.parse(localStorage.getItem("donations"))||[];
   let volunteers=Number(localStorage.getItem("volunteers"))||120;
 
   let total=donations.reduce((sum,d)=>sum+Number(d.amount||0),0);
-
   let livesCount=Math.floor(total/500000);
   let goal=10000;
 
   funds.innerText="₹"+total;
-  document.getElementById("lives").innerText=livesCount;
+  lives.innerText=livesCount;
   document.getElementById("volunteers").innerText=volunteers;
 
   let percent=Math.min((livesCount/goal)*100,100);
   progressBar.style.width=percent+"%";
   goalText.innerText=`${livesCount} / ${goal} Lives`;
+
+  /* 🔥 HOME SYNC */
+  homeProgressBar.style.width=percent+"%";
+  homeGoalText.innerText=`${livesCount} / ${goal} Lives`;
 
   let sorted=[...donations].sort((a,b)=>b.amount-a.amount);
   donorList.innerHTML="";
@@ -322,10 +323,7 @@ function updateDashboard(){
   });
 }
 
-if(localStorage.getItem("loggedIn")){
-  show("dashboard");
-  updateDashboard();
-}
+updateDashboard();
 </script>
 
 </body>
