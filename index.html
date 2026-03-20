@@ -37,7 +37,7 @@ nav {
   backdrop-filter: blur(10px);
 }
 
-/* HERO SPLIT */
+/* HERO */
 .split-hero {
   display: flex;
   justify-content: space-between;
@@ -47,7 +47,6 @@ nav {
 }
 
 .hero-left { flex:1; }
-
 .hero-left h1 { font-size: 3rem; }
 
 .hero-left button {
@@ -101,7 +100,7 @@ button.main {
   border-radius:8px;
 }
 
-/* CARDS */
+/* DASHBOARD */
 .cards {
   display:grid;
   grid-template-columns: repeat(auto-fit,minmax(220px,1fr));
@@ -131,7 +130,7 @@ button.main {
   width:0%;
 }
 
-/* DONOR GLOW */
+/* GLOW DONOR */
 .gold {
   color: gold;
   font-weight: bold;
@@ -151,7 +150,6 @@ button.main {
   position: fixed;
   width: 10px;
   height: 10px;
-  background: red;
   top: 0;
   animation: fall linear forwards;
 }
@@ -220,8 +218,13 @@ button.main {
   <div class="auth-container">
     <div class="glass auth-box">
       <h2>Welcome Back 🌿</h2>
-      <input id="loginEmail">
-      <input id="loginPass" type="password">
+
+      <label>Username</label>
+      <input id="loginEmail" placeholder="Enter your username">
+
+      <label>Password</label>
+      <input id="loginPass" type="password" placeholder="Enter your password">
+
       <button class="main" onclick="login()">Login</button>
     </div>
   </div>
@@ -232,8 +235,13 @@ button.main {
   <div class="auth-container">
     <div class="glass auth-box">
       <h2>Create Account 🌱</h2>
-      <input id="signupEmail">
-      <input id="signupPass" type="password">
+
+      <label>Username</label>
+      <input id="signupEmail" placeholder="Choose a username">
+
+      <label>Password</label>
+      <input id="signupPass" type="password" placeholder="Create a password">
+
       <button class="main" onclick="signup()">Signup</button>
     </div>
   </div>
@@ -260,7 +268,7 @@ button.main {
   <div class="glass">
     <h3>💳 Donate</h3>
     <input id="donorName" placeholder="Name">
-    <input id="donationAmount" type="number">
+    <input id="donationAmount" type="number" placeholder="Amount">
     <button onclick="donate()">Donate</button>
   </div>
 
@@ -277,7 +285,29 @@ function toggleDark(){
   document.body.classList.toggle("dark");
 }
 
-/* CONFETTI FUNCTION */
+function signup(){
+  let users=JSON.parse(localStorage.getItem("users"))||[];
+  users.push({email:signupEmail.value,pass:signupPass.value});
+  localStorage.setItem("users",JSON.stringify(users));
+  alert("Account created!");
+}
+
+function login(){
+  let users=JSON.parse(localStorage.getItem("users"))||[];
+  let user=users.find(u=>u.email==loginEmail.value && u.pass==loginPass.value);
+
+  if(user){
+    localStorage.setItem("loggedIn",true);
+    show("dashboard");
+  } else alert("Invalid login");
+}
+
+function logout(){
+  localStorage.removeItem("loggedIn");
+  show("home");
+}
+
+/* CONFETTI */
 function launchConfetti(){
   for(let i=0;i<100;i++){
     let conf=document.createElement("div");
@@ -286,7 +316,6 @@ function launchConfetti(){
     conf.style.background=`hsl(${Math.random()*360},100%,50%)`;
     conf.style.animationDuration=(Math.random()*2+2)+"s";
     document.body.appendChild(conf);
-
     setTimeout(()=>conf.remove(),3000);
   }
 }
@@ -307,7 +336,7 @@ function donate(){
   localStorage.setItem("donations",JSON.stringify(donations));
   localStorage.setItem("volunteers",volunteers);
 
-  launchConfetti(); // 🎉 CONFETTI HERE
+  launchConfetti();
 
   alert(`Thank you volunteer ${name} for your support ❤️`);
 
