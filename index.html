@@ -38,6 +38,34 @@ nav {
   background:var(--card);
 }
 
+/* HERO */
+.split-hero {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:40px;
+}
+
+.hero-left h1 {
+  font-size:3rem;
+}
+
+.hero-left button {
+  background:#43a047;
+  color:white;
+  padding:12px 25px;
+  border:none;
+  border-radius:10px;
+}
+
+/* GLASS */
+.glass {
+  background:var(--card);
+  padding:20px;
+  border-radius:15px;
+  margin-top:20px;
+}
+
 /* AUTH */
 .auth-container {
   display:flex;
@@ -51,10 +79,10 @@ nav {
   padding:30px;
   border-radius:20px;
   background:var(--card);
-  box-shadow:0 10px 30px rgba(0,0,0,0.1);
 }
 
-.auth-box input {
+/* INPUT */
+input {
   width:100%;
   padding:12px;
   margin:10px 0;
@@ -66,7 +94,6 @@ nav {
 .pass-box {
   position:relative;
 }
-
 .pass-box span {
   position:absolute;
   right:10px;
@@ -78,12 +105,12 @@ nav {
 /* BUTTON */
 button {
   width:100%;
-  margin-top:15px;
   padding:12px;
   background:#43a047;
   color:white;
   border:none;
   border-radius:10px;
+  margin-top:10px;
 }
 
 /* DASHBOARD */
@@ -103,12 +130,9 @@ button {
 .card:nth-child(2){background:#2e7d32;}
 .card:nth-child(3){background:#66bb6a;}
 
-.glass {
-  background:var(--card);
-  padding:20px;
-  border-radius:15px;
-  margin-top:20px;
-}
+/* PROGRESS */
+.progress { background:#ddd; border-radius:10px; overflow:hidden; }
+.progress-bar { height:20px; background:#43a047; width:0%; }
 
 /* HISTORY */
 .history-item {
@@ -117,6 +141,12 @@ button {
   padding:10px;
   border-bottom:1px solid #ccc;
 }
+
+/* TOP DONOR */
+.gold { color:gold; font-weight:bold; }
+.silver { color:silver; }
+.bronze { color:#cd7f32; }
+
 </style>
 </head>
 
@@ -133,9 +163,39 @@ button {
   </div>
 </nav>
 
-<!-- HOME -->
+<!-- HOME (RESTORED 🔥) -->
 <div id="home" class="section active">
-  <h1>Make a Difference 🌍</h1>
+
+  <div class="split-hero">
+
+    <!-- LEFT -->
+    <div class="hero-left">
+      <h1>Make a Difference 🌍</h1>
+      <p>Together we can change lives</p>
+      <button onclick="show('signup')">Get Started</button>
+    </div>
+
+    <!-- RIGHT -->
+    <div class="glass">
+      <h3>🌿 Impact Overview</h3>
+      <p><strong>Funds:</strong> ₹<span id="homeFunds">0</span></p>
+      <p><strong>Volunteers:</strong> <span id="homeVolunteers">120</span></p>
+
+      <h4>🏆 Top Donors</h4>
+      <ol id="topDonors"></ol>
+    </div>
+
+  </div>
+
+  <!-- GOAL -->
+  <div class="glass">
+    <h3>🎯 Goal: 10,000 Lives</h3>
+    <p id="homeGoalText"></p>
+    <div class="progress">
+      <div id="homeProgressBar" class="progress-bar"></div>
+    </div>
+  </div>
+
 </div>
 
 <!-- LOGIN -->
@@ -150,8 +210,8 @@ button {
 
 <label>Password</label>
 <div class="pass-box">
-  <input id="loginPass" type="password">
-  <span onclick="togglePass('loginPass')">👁️</span>
+<input id="loginPass" type="password">
+<span onclick="togglePass('loginPass')">👁️</span>
 </div>
 
 <button onclick="login()">Login</button>
@@ -172,8 +232,8 @@ button {
 
 <label>Password</label>
 <div class="pass-box">
-  <input id="signupPass" type="password">
-  <span onclick="togglePass('signupPass')">👁️</span>
+<input id="signupPass" type="password">
+<span onclick="togglePass('signupPass')">👁️</span>
 </div>
 
 <button onclick="signup()">Signup</button>
@@ -207,16 +267,12 @@ button {
 
 <!-- PROFILE -->
 <div id="profile" class="section">
-
 <div class="glass">
 <h2>👤 Profile</h2>
-
 <p><strong>Username:</strong> <span id="profileName"></span></p>
 <p><strong>Total Donations:</strong> ₹<span id="profileFunds"></span></p>
 <p><strong>Lives Impacted:</strong> <span id="profileLives"></span></p>
-
 </div>
-
 </div>
 
 <script>
@@ -226,17 +282,13 @@ function show(id){
   update();
 }
 
-function toggleDark(){
-  document.body.classList.toggle("dark");
-}
+function toggleDark(){ document.body.classList.toggle("dark"); }
 
-/* SHOW PASSWORD */
 function togglePass(id){
-  let input = document.getElementById(id);
-  input.type = input.type === "password" ? "text" : "password";
+  let input=document.getElementById(id);
+  input.type=input.type==="password"?"text":"password";
 }
 
-/* AUTH */
 function signup(){
   let users=JSON.parse(localStorage.getItem("users"))||[];
   users.push({email:signupEmail.value,pass:signupPass.value});
@@ -247,14 +299,12 @@ function signup(){
 function login(){
   let users=JSON.parse(localStorage.getItem("users"))||[];
   let u=users.find(x=>x.email==loginEmail.value && x.pass==loginPass.value);
-
   if(u){
-    localStorage.setItem("currentUser", u.email);
+    localStorage.setItem("currentUser",u.email);
     show("dashboard");
   } else alert("Invalid login");
 }
 
-/* DONATE */
 function donate(){
   let name=donorName.value.trim();
   let amount=Number(donationAmount.value);
@@ -275,22 +325,35 @@ function donate(){
   update();
 }
 
-/* UPDATE */
 function update(){
   let data=JSON.parse(localStorage.getItem("donations"))||[];
+  let volunteers=Number(localStorage.getItem("volunteers"))||120;
+
   let total=data.reduce((s,d)=>s+Number(d.amount||0),0);
   let lives=Math.floor(total/500000);
 
   funds.innerText="₹"+total.toLocaleString();
   document.getElementById("lives").innerText=lives;
+  document.getElementById("volunteers").innerText=volunteers;
 
-  /* PROFILE */
-  let user=localStorage.getItem("currentUser") || "Guest";
-  profileName.innerText=user;
-  profileFunds.innerText=total.toLocaleString();
-  profileLives.innerText=lives;
+  homeFunds.innerText=total.toLocaleString();
+  homeVolunteers.innerText=volunteers;
 
-  /* HISTORY */
+  let goal=10000;
+  let percent=Math.min((lives/goal)*100,100);
+  homeProgressBar.style.width=percent+"%";
+  homeGoalText.innerText=`${lives} / ${goal} Lives`;
+
+  let top=[...data].sort((a,b)=>Number(b.amount)-Number(a.amount)).slice(0,3);
+  topDonors.innerHTML="";
+  top.forEach((d,i)=>{
+    let li=document.createElement("li");
+    li.className=i==0?"gold":i==1?"silver":"bronze";
+    li.innerText=`${["🥇","🥈","🥉"][i]} ${d.name} - ₹${Number(d.amount).toLocaleString()}`;
+    topDonors.appendChild(li);
+  });
+
+  let history=document.getElementById("history");
   history.innerHTML="";
   data.slice().reverse().forEach(d=>{
     let div=document.createElement("div");
@@ -302,6 +365,11 @@ function update(){
     `;
     history.appendChild(div);
   });
+
+  let user=localStorage.getItem("currentUser")||"Guest";
+  profileName.innerText=user;
+  profileFunds.innerText=total.toLocaleString();
+  profileLives.innerText=lives;
 }
 
 update();
