@@ -6,8 +6,6 @@
 <title>NGO Platform</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-
-<!-- ICONS -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
 <style>
@@ -28,6 +26,7 @@ body {
   font-family:'Poppins';
   background:var(--bg);
   color:var(--text);
+  transition:0.3s;
 }
 
 /* SIDEBAR */
@@ -35,49 +34,57 @@ body {
   position:fixed;
   top:0;
   left:0;
-  height:100vh;
   width:220px;
+  height:100vh;
   background:rgba(0,0,0,0.05);
   display:flex;
   flex-direction:column;
   align-items:center;
   padding-top:20px;
   gap:15px;
-}
-
-.sidebar h2 {
-  margin-bottom:20px;
+  animation: slideIn 0.6s ease;
 }
 
 .sidebar button {
   width:85%;
   padding:12px;
-  border:none;
-  border-radius:12px;
   background:#43a047;
   color:white;
+  border:none;
+  border-radius:12px;
+  cursor:pointer;
   display:flex;
   align-items:center;
   gap:10px;
   justify-content:center;
-  cursor:pointer;
   transition:0.3s;
 }
 
 .sidebar button:hover {
   background:#2e7d32;
-  transform:scale(1.05);
+  transform:scale(1.07);
+  box-shadow:0 0 10px #43a047;
 }
 
-/* SHIFT CONTENT */
+/* MAIN */
 .main {
   margin-left:220px;
   padding:40px;
 }
 
 /* SECTIONS */
-.section { display:none; }
-.active { display:block; }
+.section {
+  display:none;
+  opacity:0;
+  transform:translateY(20px);
+  transition:0.4s;
+}
+
+.active {
+  display:block;
+  opacity:1;
+  transform:translateY(0);
+}
 
 /* HERO */
 .split-hero {
@@ -86,16 +93,18 @@ body {
   gap:40px;
 }
 
-.hero-left h1 {
-  font-size:3rem;
-}
-
 /* GLASS */
 .glass {
   background:var(--card);
   padding:20px;
   border-radius:15px;
   margin-top:20px;
+  transition:0.3s;
+}
+
+.glass:hover {
+  transform:translateY(-5px);
+  box-shadow:0 10px 20px rgba(0,0,0,0.1);
 }
 
 /* AUTH */
@@ -111,8 +120,10 @@ body {
   padding:30px;
   border-radius:20px;
   background:var(--card);
+  animation: fadeIn 0.5s ease;
 }
 
+/* INPUT */
 input {
   width:100%;
   padding:12px;
@@ -140,6 +151,13 @@ button {
   color:white;
   border:none;
   border-radius:10px;
+  cursor:pointer;
+  transition:0.3s;
+}
+
+button:hover {
+  transform:scale(1.05);
+  box-shadow:0 0 10px #43a047;
 }
 
 /* DASHBOARD */
@@ -153,6 +171,11 @@ button {
   padding:20px;
   border-radius:15px;
   color:white;
+  transition:0.3s;
+}
+
+.card:hover {
+  transform:translateY(-8px);
 }
 
 .card:nth-child(1){background:#43a047;}
@@ -160,15 +183,31 @@ button {
 .card:nth-child(3){background:#66bb6a;}
 
 /* PROGRESS */
-.progress { background:#ddd; border-radius:10px; overflow:hidden; }
-.progress-bar { height:20px; background:#43a047; width:0%; }
+.progress {
+  background:#ddd;
+  border-radius:10px;
+  overflow:hidden;
+}
+
+.progress-bar {
+  height:20px;
+  background:#43a047;
+  width:0%;
+  transition:1s ease;
+}
 
 /* HISTORY */
 .history-item {
   display:flex;
   justify-content:space-between;
-  padding:10px;
+  padding:12px;
   border-bottom:1px solid #ccc;
+  transition:0.3s;
+}
+
+.history-item:hover {
+  background:rgba(0,0,0,0.05);
+  transform:scale(1.02);
 }
 
 /* DONOR COLORS */
@@ -176,6 +215,16 @@ button {
 .silver { color:silver; }
 .bronze { color:#cd7f32; }
 
+/* ANIMATIONS */
+@keyframes fadeIn {
+  from {opacity:0;}
+  to {opacity:1;}
+}
+
+@keyframes slideIn {
+  from {transform:translateX(-100%);}
+  to {transform:translateX(0);}
+}
 </style>
 </head>
 
@@ -198,7 +247,7 @@ button {
 <div id="home" class="section active">
 
 <div class="split-hero">
-  <div class="hero-left">
+  <div>
     <h1>Make a Difference 🌍</h1>
     <button onclick="show('signup')">Get Started</button>
   </div>
@@ -214,7 +263,9 @@ button {
 <div class="glass">
   <h3>Goal: 10,000 Lives</h3>
   <p id="homeGoalText"></p>
-  <div class="progress"><div id="homeProgressBar" class="progress-bar"></div></div>
+  <div class="progress">
+    <div id="homeProgressBar" class="progress-bar"></div>
+  </div>
 </div>
 
 </div>
@@ -223,8 +274,8 @@ button {
 <div id="login" class="section">
 <div class="auth-container">
 <div class="auth-box">
-
 <h2>Login</h2>
+
 <input id="loginEmail" placeholder="Username">
 
 <div class="pass-box">
@@ -233,7 +284,6 @@ button {
 </div>
 
 <button onclick="login()">Login</button>
-
 </div>
 </div>
 </div>
@@ -242,8 +292,8 @@ button {
 <div id="signup" class="section">
 <div class="auth-container">
 <div class="auth-box">
-
 <h2>Signup</h2>
+
 <input id="signupEmail" placeholder="Username">
 
 <div class="pass-box">
@@ -252,7 +302,6 @@ button {
 </div>
 
 <button onclick="signup()">Signup</button>
-
 </div>
 </div>
 </div>
@@ -381,7 +430,6 @@ function update(){
     div.innerHTML=`
       <span>${d.name}</span>
       <span>₹${Number(d.amount).toLocaleString()}</span>
-      <span>${d.date}</span>
     `;
     history.appendChild(div);
   });
