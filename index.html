@@ -36,8 +36,8 @@ nav {
   backdrop-filter: blur(10px);
 }
 
-button {
-  cursor: pointer;
+nav button {
+  margin-left: 10px;
 }
 
 /* HERO */
@@ -63,7 +63,39 @@ button {
   background: var(--card);
   backdrop-filter: blur(12px);
   border-radius: 15px;
-  padding: 20px;
+  padding: 25px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+}
+
+/* LOGIN / SIGNUP CENTERED */
+.auth-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 70vh;
+}
+
+.auth-box {
+  width: 350px;
+}
+
+/* INPUT */
+input {
+  width: 100%;
+  margin: 10px 0;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #c8e6c9;
+}
+
+/* BUTTON */
+button.main {
+  width: 100%;
+  background: #43a047;
+  color: white;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
 }
 
 /* CARDS */
@@ -84,13 +116,12 @@ button {
 .card:nth-child(3){background:#66bb6a;}
 .card:nth-child(4){background:#388e3c;}
 
-/* PROGRESS BAR */
+/* PROGRESS */
 .progress {
   background:#ddd;
   border-radius:10px;
   overflow:hidden;
 }
-
 .progress-bar {
   height:20px;
   background:#43a047;
@@ -99,14 +130,6 @@ button {
 
 /* LIST */
 ul { list-style:none; padding:0; }
-li { padding:8px; }
-
-/* INPUT */
-input {
-  width:100%;
-  margin:10px 0;
-  padding:10px;
-}
 
 /* CAMPAIGNS */
 .campaigns {
@@ -114,7 +137,6 @@ input {
   grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
   gap:20px;
 }
-
 .campaign img {
   width:100%;
   height:150px;
@@ -164,21 +186,25 @@ input {
 
 <!-- LOGIN -->
 <div id="login" class="section">
-  <div class="glass">
-    <h2>Login</h2>
-    <input id="loginEmail">
-    <input id="loginPass" type="password">
-    <button onclick="login()">Login</button>
+  <div class="auth-container">
+    <div class="glass auth-box">
+      <h2>Welcome Back 🌿</h2>
+      <input id="loginEmail" placeholder="Email">
+      <input id="loginPass" type="password" placeholder="Password">
+      <button class="main" onclick="login()">Login</button>
+    </div>
   </div>
 </div>
 
 <!-- SIGNUP -->
 <div id="signup" class="section">
-  <div class="glass">
-    <h2>Signup</h2>
-    <input id="signupEmail">
-    <input id="signupPass" type="password">
-    <button onclick="signup()">Signup</button>
+  <div class="auth-container">
+    <div class="glass auth-box">
+      <h2>Create Account 🌱</h2>
+      <input id="signupEmail" placeholder="Email">
+      <input id="signupPass" type="password" placeholder="Password">
+      <button class="main" onclick="signup()">Signup</button>
+    </div>
   </div>
 </div>
 
@@ -192,15 +218,13 @@ input {
     <div class="card"><h3 id="lives">0</h3><p>Lives</p></div>
   </div>
 
-  <!-- PROGRESS -->
-  <div class="glass" style="margin-top:20px;">
-    <h3>🎯 Goal Progress (₹100000)</h3>
+  <div class="glass">
+    <h3>🎯 Goal (₹100000)</h3>
     <div class="progress">
       <div id="progressBar" class="progress-bar"></div>
     </div>
   </div>
 
-  <!-- DONATION -->
   <div class="glass">
     <h3>💳 Donate</h3>
     <input id="donorName" placeholder="Name">
@@ -208,7 +232,6 @@ input {
     <button onclick="donate()">Donate</button>
   </div>
 
-  <!-- DONORS -->
   <div class="glass">
     <h3>🏆 Top Donors</h3>
     <ul id="donorList"></ul>
@@ -222,7 +245,6 @@ function show(id){
   document.getElementById(id).classList.add("active");
 }
 
-/* DARK MODE */
 function toggleDark(){
   document.body.classList.toggle("dark");
 }
@@ -230,10 +252,7 @@ function toggleDark(){
 /* SIGNUP */
 function signup(){
   let users=JSON.parse(localStorage.getItem("users"))||[];
-  users.push({
-    email:signupEmail.value,
-    pass:signupPass.value
-  });
+  users.push({email:signupEmail.value,pass:signupPass.value});
   localStorage.setItem("users",JSON.stringify(users));
   alert("Account created!");
 }
@@ -250,7 +269,6 @@ function login(){
   } else alert("Invalid login");
 }
 
-/* LOGOUT */
 function logout(){
   localStorage.removeItem("loggedIn");
   show("home");
@@ -286,17 +304,17 @@ function updateDashboard(){
   let volunteers=Number(localStorage.getItem("volunteers"))||120;
 
   let total=donations.reduce((sum,d)=>sum+Number(d.amount||0),0);
-  let lives=Math.floor(total/100);
+
+  // 🔥 NEW LOGIC: 1 LIFE per 500000
+  let livesCount=Math.floor(total/500000);
 
   funds.innerText="₹"+total;
-  lives.innerText=lives;
+  document.getElementById("lives").innerText=livesCount;
   document.getElementById("volunteers").innerText=volunteers;
 
-  /* PROGRESS */
   let percent=Math.min((total/100000)*100,100);
   progressBar.style.width=percent+"%";
 
-  /* TOP DONORS */
   let sorted=[...donations].sort((a,b)=>b.amount-a.amount);
   donorList.innerHTML="";
   sorted.slice(0,5).forEach(d=>{
@@ -306,7 +324,6 @@ function updateDashboard(){
   });
 }
 
-/* AUTO LOGIN */
 if(localStorage.getItem("loggedIn")){
   show("dashboard");
   updateDashboard();
