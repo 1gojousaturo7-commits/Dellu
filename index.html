@@ -2,33 +2,66 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>NGO Platform</title>
 
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
 <style>
-body {
+* {
   margin: 0;
+  padding: 0;
+  box-sizing: border-box;
   font-family: 'Poppins', sans-serif;
-  background: linear-gradient(to right, #eef5ee, #f9fbf9);
 }
 
-/* Navbar */
+body {
+  background: linear-gradient(135deg, #eef5ee, #f9fbff);
+}
+
+/* NAVBAR */
 nav {
   display: flex;
   justify-content: space-between;
-  padding: 15px 30px;
-  background: #4CAF50;
-  color: white;
+  padding: 15px 40px;
+  background: rgba(255,255,255,0.7);
+  backdrop-filter: blur(10px);
+  position: sticky;
+  top: 0;
+}
+
+nav h2 {
+  color: #2e7d32;
 }
 
 nav button {
-  background: white;
+  margin-left: 10px;
   border: none;
-  padding: 8px 12px;
+  padding: 8px 14px;
   border-radius: 8px;
   cursor: pointer;
 }
 
-/* Sections */
+/* HERO */
+.hero {
+  text-align: center;
+  padding: 80px 20px;
+}
+
+.hero h1 {
+  font-size: 3rem;
+}
+
+.hero button {
+  background: #4CAF50;
+  color: white;
+  padding: 12px 25px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+}
+
+/* SECTIONS */
 .section {
   display: none;
   padding: 40px;
@@ -38,40 +71,94 @@ nav button {
   display: block;
 }
 
-/* Forms */
+/* GLASS */
+.glass {
+  background: rgba(255,255,255,0.6);
+  backdrop-filter: blur(12px);
+  border-radius: 15px;
+  padding: 25px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+}
+
+/* FORM */
 .form {
-  max-width: 300px;
+  max-width: 350px;
   margin: auto;
-  background: white;
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 10px 20px rgba(0,0,0,0.1);
 }
 
 input {
   width: 100%;
   margin: 10px 0;
-  padding: 10px;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
 }
 
 button.main {
   width: 100%;
   background: #4CAF50;
   color: white;
+  padding: 12px;
 }
 
-/* Dashboard */
+/* DASHBOARD */
 .cards {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px,1fr));
+  grid-template-columns: repeat(auto-fit, minmax(220px,1fr));
   gap: 20px;
 }
 
 .card {
-  background: white;
   padding: 20px;
+  border-radius: 15px;
+  color: white;
+}
+
+.card:nth-child(1){background:#4CAF50;}
+.card:nth-child(2){background:#2196F3;}
+.card:nth-child(3){background:#FF9800;}
+.card:nth-child(4){background:#E91E63;}
+
+/* CAMPAIGNS */
+.campaigns {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px,1fr));
+  gap: 20px;
+  margin-top: 40px;
+}
+
+.campaign {
+  background: white;
   border-radius: 12px;
-  box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+
+.campaign img {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+}
+
+.campaign p {
+  padding: 10px;
+}
+
+/* DONOR LIST */
+ul {
+  list-style: none;
+  padding: 0;
+}
+
+li {
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+/* FOOTER */
+footer {
+  text-align: center;
+  padding: 20px;
+  color: gray;
 }
 </style>
 </head>
@@ -90,13 +177,33 @@ button.main {
 
 <!-- HOME -->
 <div id="home" class="section active">
-  <h1>Make The World Better 🌍</h1>
-  <p>Your small help can change lives</p>
+  <div class="hero">
+    <h1>Make a Difference 🌍</h1>
+    <p>Empowering lives through collective action</p>
+    <button onclick="show('signup')">Get Started</button>
+  </div>
+
+  <div class="campaigns">
+    <div class="campaign">
+      <img src="https://images.unsplash.com/photo-1524492412937-b28074a5d7da">
+      <p>Clean Water Initiative</p>
+    </div>
+
+    <div class="campaign">
+      <img src="https://images.unsplash.com/photo-1509099836639-18ba1795216d">
+      <p>Education for All</p>
+    </div>
+
+    <div class="campaign">
+      <img src="https://images.unsplash.com/photo-1469571486292-b53601020a5f">
+      <p>Food Donation Drive</p>
+    </div>
+  </div>
 </div>
 
 <!-- LOGIN -->
 <div id="login" class="section">
-  <div class="form">
+  <div class="glass form">
     <h2>Login</h2>
     <input id="loginEmail" placeholder="Email">
     <input id="loginPass" type="password" placeholder="Password">
@@ -106,7 +213,7 @@ button.main {
 
 <!-- SIGNUP -->
 <div id="signup" class="section">
-  <div class="form">
+  <div class="glass form">
     <h2>Signup</h2>
     <input id="signupEmail" placeholder="Email">
     <input id="signupPass" type="password" placeholder="Password">
@@ -118,60 +225,115 @@ button.main {
 <div id="dashboard" class="section">
   <h2>Dashboard 🌿</h2>
 
+  <!-- Cards -->
   <div class="cards">
-    <div class="card">₹50,000 Funds</div>
-    <div class="card">120 Volunteers</div>
-    <div class="card">35 Campaigns</div>
-    <div class="card">500+ Lives Impacted</div>
+    <div class="card"><h3 id="funds">₹0</h3><p>Funds Raised</p></div>
+    <div class="card"><h3>120</h3><p>Volunteers</p></div>
+    <div class="card"><h3>35</h3><p>Campaigns</p></div>
+    <div class="card"><h3 id="lives">0</h3><p>Lives Impacted</p></div>
+  </div>
+
+  <!-- Donation -->
+  <div class="glass" style="margin-top:30px;">
+    <h3>💳 Donate to NGO</h3>
+    <input id="donorName" placeholder="Your Name">
+    <input id="donationAmount" type="number" placeholder="Amount (₹)">
+    <button class="main" onclick="donate()">Donate</button>
+  </div>
+
+  <!-- Donor List -->
+  <div class="glass" style="margin-top:30px;">
+    <h3>❤️ Recent Donors</h3>
+    <ul id="donorList"></ul>
   </div>
 </div>
 
+<footer>
+  © 2026 NGO Platform | Built with ❤️
+</footer>
+
 <script>
-function show(id) {
-  document.querySelectorAll(".section").forEach(s => s.classList.remove("active"));
+function show(id){
+  document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
   document.getElementById(id).classList.add("active");
 }
 
 /* Signup */
-function signup() {
-  let email = document.getElementById("signupEmail").value;
-  let pass = document.getElementById("signupPass").value;
+function signup(){
+  let email=document.getElementById("signupEmail").value;
+  let pass=document.getElementById("signupPass").value;
 
-  let users = JSON.parse(localStorage.getItem("users")) || [];
-
-  users.push({ email, pass });
-  localStorage.setItem("users", JSON.stringify(users));
+  let users=JSON.parse(localStorage.getItem("users"))||[];
+  users.push({email,pass});
+  localStorage.setItem("users",JSON.stringify(users));
 
   alert("Account created!");
   show("login");
 }
 
 /* Login */
-function login() {
-  let email = document.getElementById("loginEmail").value;
-  let pass = document.getElementById("loginPass").value;
+function login(){
+  let email=document.getElementById("loginEmail").value;
+  let pass=document.getElementById("loginPass").value;
 
-  let users = JSON.parse(localStorage.getItem("users")) || [];
+  let users=JSON.parse(localStorage.getItem("users"))||[];
+  let user=users.find(u=>u.email===email && u.pass===pass);
 
-  let user = users.find(u => u.email === email && u.pass === pass);
-
-  if (user) {
-    localStorage.setItem("loggedIn", true);
+  if(user){
+    localStorage.setItem("loggedIn",true);
     show("dashboard");
-  } else {
-    alert("Invalid login");
-  }
+    updateDashboard();
+  } else alert("Invalid login");
 }
 
 /* Logout */
-function logout() {
+function logout(){
   localStorage.removeItem("loggedIn");
   show("home");
 }
 
-/* Auto login */
-if (localStorage.getItem("loggedIn")) {
+/* Donate */
+function donate(){
+  let name=document.getElementById("donorName").value;
+  let amount=parseInt(document.getElementById("donationAmount").value);
+
+  if(!name || !amount){
+    alert("Enter valid details");
+    return;
+  }
+
+  let donations=JSON.parse(localStorage.getItem("donations"))||[];
+  donations.push({name,amount});
+  localStorage.setItem("donations",JSON.stringify(donations));
+
+  updateDashboard();
+  alert("Thank you ❤️");
+}
+
+/* Update Dashboard */
+function updateDashboard(){
+  let donations=JSON.parse(localStorage.getItem("donations"))||[];
+
+  let total=donations.reduce((sum,d)=>sum+d.amount,0);
+  let lives=Math.floor(total/100);
+
+  document.getElementById("funds").innerText="₹"+total;
+  document.getElementById("lives").innerText=lives;
+
+  let list=document.getElementById("donorList");
+  list.innerHTML="";
+
+  donations.slice().reverse().forEach(d=>{
+    let li=document.createElement("li");
+    li.innerText=`${d.name} donated ₹${d.amount}`;
+    list.appendChild(li);
+  });
+}
+
+/* Auto Login */
+if(localStorage.getItem("loggedIn")){
   show("dashboard");
+  updateDashboard();
 }
 </script>
 
