@@ -71,7 +71,14 @@ input {
 const API = "https://ngo-backend-5zc1.onrender.com";
 let token = localStorage.getItem("token");
 
-// ---------------- NAV CONTROL ----------------
+// ELEMENTS
+const loginBtn = document.getElementById("loginBtn");
+const signupBtn = document.getElementById("signupBtn");
+const dashboardBtn = document.getElementById("dashboardBtn");
+const logoutBtn = document.getElementById("logoutBtn");
+const app = document.getElementById("app");
+
+// NAV
 function updateNav() {
   if (token) {
     loginBtn.style.display = "none";
@@ -86,7 +93,7 @@ function updateNav() {
   }
 }
 
-// ---------------- HOME ----------------
+// HOME
 function showHome() {
   app.innerHTML = `
     <h1>Donate & Save Lives 🌍</h1>
@@ -95,7 +102,7 @@ function showHome() {
   `;
 }
 
-// ---------------- LOGIN ----------------
+// LOGIN
 function showLogin() {
   app.innerHTML = `
     <h2>Login</h2>
@@ -106,29 +113,33 @@ function showLogin() {
 }
 
 async function login() {
-  const res = await fetch(`${API}/api/auth/login`, {
-    method: "POST",
-    headers: {"Content-Type":"application/json"},
-    body: JSON.stringify({
-      email: email.value,
-      password: password.value
-    })
-  });
+  try {
+    const res = await fetch(`${API}/api/auth/login`, {
+      method: "POST",
+      headers: {"Content-Type":"application/json"},
+      body: JSON.stringify({
+        email: document.getElementById("email").value,
+        password: document.getElementById("password").value
+      })
+    });
 
-  const data = await res.json();
+    const data = await res.json();
 
-  if (data.token) {
-    token = data.token;
-    localStorage.setItem("token", token);
-    alert("Login success");
-    updateNav();
-    showDashboard();
-  } else {
-    alert(data.message || "Login failed");
+    if (data.token) {
+      token = data.token;
+      localStorage.setItem("token", token);
+      alert("Login success 🚀");
+      updateNav();
+      showDashboard();
+    } else {
+      alert(data.message || "Login failed");
+    }
+  } catch {
+    alert("Server error");
   }
 }
 
-// ---------------- SIGNUP ----------------
+// SIGNUP
 function showSignup() {
   app.innerHTML = `
     <h2>Signup</h2>
@@ -139,26 +150,30 @@ function showSignup() {
 }
 
 async function signup() {
-  const res = await fetch(`${API}/api/auth/signup`, {
-    method: "POST",
-    headers: {"Content-Type":"application/json"},
-    body: JSON.stringify({
-      email: email.value,
-      password: password.value
-    })
-  });
+  try {
+    const res = await fetch(`${API}/api/auth/signup`, {
+      method: "POST",
+      headers: {"Content-Type":"application/json"},
+      body: JSON.stringify({
+        email: document.getElementById("email").value,
+        password: document.getElementById("password").value
+      })
+    });
 
-  const data = await res.json();
+    const data = await res.json();
 
-  if (data.message) {
-    alert("Signup success, please login");
-    showLogin();
-  } else {
-    alert("Signup failed");
+    if (data.message) {
+      alert("Signup successful ✅ Please login");
+      showLogin();
+    } else {
+      alert("Signup failed");
+    }
+  } catch {
+    alert("Server error");
   }
 }
 
-// ---------------- DASHBOARD ----------------
+// DASHBOARD
 function showDashboard() {
   if (!token) return showLogin();
 
@@ -173,44 +188,66 @@ function showDashboard() {
 
     <div class="card">
       <h3>Your Donations</h3>
-      <ul id="donations"></ul>
+      <ul id="donations">Loading...</ul>
     </div>
   `;
 
   loadDonations();
 }
 
-// ---------------- DONATE ----------------
+// DONATE
 async function donate() {
-  await fetch(`${API}/api/donations`, {
-    method: "POST",
-    headers: {
-      "Content-Type":"application/json",
-      "Authorization": "Bearer " + token
-    },
-    body: JSON.stringify({ amount: amount.value })
-  });
+  try {
+    await fetch(`${API}/api/donations`, {
+      method: "POST",
+      headers: {
+        "Content-Type":"application/json",
+        "Authorization": "Bearer " + token
+      },
+      body: JSON.stringify({
+        amount: document.getElementById("amount").value
+      })
+    });
 
-  loadDonations();
+    loadDonations();
+  } catch {
+    alert("Donation failed");
+  }
 }
 
-// ---------------- LOAD DONATIONS ----------------
+// LOAD DONATIONS
 async function loadDonations() {
-  const res = await fetch(`${API}/api/donations`, {
-    headers: {
-      "Authorization": "Bearer " + token
+  try {
+    const res = await fetch(`${API}/api/donations`, {
+      headers: {
+        "Authorization": "Bearer " + token
+      }
+    });
+
+    const data = await res.json();
+    const list = document.getElementById("donations");
+
+    if (!Array.isArray(data)) {
+      list.innerHTML = "Error loading donations";
+      return;
     }
-  });
 
-  const data = await res.json();
+    if (data.length === 0) {
+      list.innerHTML = "<li>No donations yet</li>";
+      return;
+    }
 
-  donations.innerHTML = "";
-  data.forEach(d => {
-    donations.innerHTML += `<li>₹${d.amount}</li>`;
-  });
+    list.innerHTML = "";
+    data.forEach(d => {
+      list.innerHTML += `<li>₹${d.amount}</li>`;
+    });
+
+  } catch {
+    document.getElementById("donations").innerHTML = "Server error";
+  }
 }
 
-// ---------------- LOGOUT ----------------
+// LOGOUT
 function logout() {
   localStorage.removeItem("token");
   token = null;
