@@ -6,248 +6,304 @@
 <title>NGO Platform</title>
 
 <style>
-body {
-  margin:0;
-  font-family: Arial;
-  background: linear-gradient(135deg,#0f2027,#203a43,#2c5364);
-  color:white;
+body{
+margin:0;
+font-family:Arial;
+background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+color:white;
 }
 
-.navbar {
-  display:flex;
-  justify-content:space-between;
-  padding:20px 40px;
+.navbar{
+display:flex;
+justify-content:space-between;
+padding:20px 40px;
 }
 
-.navbar button {
-  margin-left:10px;
-  padding:8px 15px;
-  border:none;
-  border-radius:8px;
-  background:#ff6b6b;
-  color:white;
-  cursor:pointer;
+.navbar button{
+margin-left:10px;
+padding:8px 15px;
+border:none;
+border-radius:8px;
+background:#ff6b6b;
+color:white;
+cursor:pointer;
 }
 
-.hero {
-  display:flex;
-  justify-content:space-between;
-  padding:60px;
+.hero{
+display:flex;
+justify-content:space-between;
+padding:60px;
 }
 
-.card {
-  background:rgba(255,255,255,0.1);
-  padding:20px;
-  border-radius:15px;
-  width:250px;
+.card{
+background:rgba(255,255,255,0.1);
+padding:20px;
+border-radius:15px;
+margin:10px;
 }
 
-input {
-  width:100%;
-  padding:10px;
-  margin:10px 0;
+input{
+width:100%;
+padding:10px;
+margin:10px 0;
 }
 
-button.main {
-  width:100%;
-  background:#00c9a7;
+button.main{
+width:100%;
+background:#00c9a7;
 }
 
-.section { display:none; }
-.active { display:block; }
+.section{display:none;}
+.active{display:block;}
 
-.history-item {
-  display:flex;
-  justify-content:space-between;
-  padding:10px;
-  border-bottom:1px solid #aaa;
+.history-item{
+display:flex;
+justify-content:space-between;
+padding:10px;
+border-bottom:1px solid #aaa;
+}
+
+.chatbox{
+position:fixed;
+bottom:20px;
+right:20px;
+width:250px;
+background:#222;
+padding:10px;
+border-radius:10px;
 }
 </style>
 </head>
 
 <body>
 
-<!-- NAVBAR -->
 <div class="navbar">
-  <h2>❤️ NGO</h2>
-
-  <div id="navButtons">
-    <!-- dynamic -->
-  </div>
+<h2>❤️ NGO</h2>
+<div id="nav"></div>
 </div>
 
 <!-- HOME -->
 <div id="home" class="section active">
-  <div class="hero">
-    <div>
-      <h1>Donate & Save Lives 🌍</h1>
-      <p>Help provide food, shelter & hope</p>
-      <button onclick="show('login')">Get Started</button>
-    </div>
+<div class="hero">
 
-    <div class="card">
-      <h3>Donate Now</h3>
-      <input id="donationAmount" placeholder="Enter amount">
-      <button class="main" onclick="donate()">Donate</button>
-    </div>
-  </div>
+<div>
+<h1>Donate & Save Lives 🌍</h1>
+<p>Food, shelter & hope for everyone</p>
+<button onclick="show('login')">Get Started</button>
+</div>
+
+<div class="card">
+<h3>Donate Now</h3>
+<input id="amount" placeholder="Enter amount">
+<button class="main" onclick="donate()">Donate</button>
+</div>
+
+</div>
+
+<div class="card">
+<h3>Impact Tracker</h3>
+<p id="impact"></p>
+</div>
+
+<div class="card">
+<h3>Transparency</h3>
+<div id="usage"></div>
+</div>
+
+<div class="card">
+<h3>Events</h3>
+<ul>
+<li>Food Drive - Mumbai</li>
+<li>Clothes Donation Camp</li>
+<li>Blood Donation Event</li>
+</ul>
+</div>
+
 </div>
 
 <!-- LOGIN -->
 <div id="login" class="section">
-  <h2>Login</h2>
-  <input id="loginEmail" placeholder="Email">
-  <input id="loginPass" type="password" placeholder="Password">
-  <button onclick="login()">Login</button>
+<h2>Login</h2>
+<input id="loginEmail">
+<input id="loginPass" type="password">
+<button onclick="login()">Login</button>
 </div>
 
 <!-- SIGNUP -->
 <div id="signup" class="section">
-  <h2>Signup</h2>
-  <input id="signupEmail" placeholder="Email">
-  <input id="signupPass" type="password" placeholder="Password">
-  <button onclick="signup()">Signup</button>
+<h2>Signup</h2>
+<input id="signupEmail">
+<input id="signupPass" type="password">
+<button onclick="signup()">Signup</button>
 </div>
 
 <!-- DASHBOARD -->
 <div id="dashboard" class="section">
-  <h2>Your Dashboard</h2>
 
-  <div class="card">
-    <h3>Your Donations</h3>
-    <div id="userHistory"></div>
-  </div>
+<div class="card">
+<h3>Your Donations</h3>
+<div id="history"></div>
+</div>
 
-  <div class="card">
-    <h3>Your Badge 🏆</h3>
-    <p id="badge"></p>
-  </div>
+<div class="card">
+<h3>Your Badge</h3>
+<p id="badge"></p>
+</div>
+
+<div class="card">
+<h3>Volunteer Signup</h3>
+<input id="volName" placeholder="Your Name">
+<button onclick="addVolunteer()">Join</button>
+<p id="volCount"></p>
+</div>
+
+<div class="card">
+<h3>Beneficiaries</h3>
+<input id="benName" placeholder="Beneficiary Name">
+<button onclick="addBeneficiary()">Add</button>
+<div id="benList"></div>
+</div>
+
+</div>
+
+<!-- CHATBOT -->
+<div class="chatbox">
+<input id="chatInput" placeholder="Ask AI...">
+<button onclick="chat()">Send</button>
+<p id="chatOutput"></p>
 </div>
 
 <script>
 
-// 🔥 NAVBAR CONTROL
-function updateNavbar(){
-  let user = localStorage.getItem("currentUser");
-  let nav = document.getElementById("navButtons");
+// NAVBAR
+function updateNav(){
+let user=localStorage.getItem("user");
+let nav=document.getElementById("nav");
 
-  if(user){
-    nav.innerHTML = `
-      <button onclick="show('home')">Home</button>
-      <button onclick="show('dashboard')">Dashboard</button>
-      <button onclick="logout()">Logout</button>
-    `;
-  } else {
-    nav.innerHTML = `
-      <button onclick="show('home')">Home</button>
-      <button onclick="show('login')">Login</button>
-      <button onclick="show('signup')">Signup</button>
-    `;
-  }
+if(user){
+nav.innerHTML=`
+<button onclick="show('home')">Home</button>
+<button onclick="show('dashboard')">Dashboard</button>
+<button onclick="logout()">Logout</button>`;
+}else{
+nav.innerHTML=`
+<button onclick="show('home')">Home</button>
+<button onclick="show('login')">Login</button>
+<button onclick="show('signup')">Signup</button>`;
+}
 }
 
-// PAGE SWITCH
+// NAVIGATION
 function show(id){
-  document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
-  document.getElementById(id).classList.add("active");
-  update();
+document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
+document.getElementById(id).classList.add("active");
+update();
 }
 
-// SIGNUP
+// AUTH
 function signup(){
-  let users = JSON.parse(localStorage.getItem("users")) || [];
-  users.push({
-    email: signupEmail.value,
-    pass: signupPass.value
-  });
-
-  localStorage.setItem("users", JSON.stringify(users));
-  alert("Signup successful!");
-
-  show("login"); // 🔥 redirect to login
+let users=JSON.parse(localStorage.getItem("users"))||[];
+users.push({email:signupEmail.value,pass:signupPass.value});
+localStorage.setItem("users",JSON.stringify(users));
+alert("Signup done");
+show("login");
 }
 
-// LOGIN
 function login(){
-  let users = JSON.parse(localStorage.getItem("users")) || [];
-
-  let user = users.find(u =>
-    u.email === loginEmail.value &&
-    u.pass === loginPass.value
-  );
-
-  if(user){
-    localStorage.setItem("currentUser", user.email);
-    updateNavbar(); // 🔥 update UI
-    show("dashboard");
-  } else {
-    alert("Invalid login");
-  }
+let users=JSON.parse(localStorage.getItem("users"))||[];
+let u=users.find(x=>x.email==loginEmail.value && x.pass==loginPass.value);
+if(u){
+localStorage.setItem("user",u.email);
+updateNav();
+show("dashboard");
+}else alert("Invalid");
 }
 
-// LOGOUT
 function logout(){
-  localStorage.removeItem("currentUser");
-  updateNavbar(); // 🔥 update UI
-  show("home");   // 🔥 go back to home
+localStorage.removeItem("user");
+updateNav();
+show("home");
 }
 
 // DONATE
 function donate(){
-  let user = localStorage.getItem("currentUser");
+let user=localStorage.getItem("user");
+if(!user){alert("Login first");return show("login");}
 
-  if(!user){
-    alert("Login first!");
-    show("login");
-    return;
-  }
+let amt=Number(amount.value);
+let data=JSON.parse(localStorage.getItem("donations"))||[];
 
-  let amount = Number(donationAmount.value);
-  if(amount <= 0) return alert("Invalid amount");
+let id="DON"+Date.now();
+data.push({user,amt,id});
 
-  let data = JSON.parse(localStorage.getItem("donations")) || [];
-
-  data.push({
-    name:user,
-    amount:amount
-  });
-
-  localStorage.setItem("donations", JSON.stringify(data));
-
-  alert("Donation successful ❤️");
-  update();
+localStorage.setItem("donations",JSON.stringify(data));
+alert("Donated!");
+update();
 }
 
-// UPDATE DASHBOARD
+// UPDATE
 function update(){
-  let user = localStorage.getItem("currentUser");
-  let data = JSON.parse(localStorage.getItem("donations")) || [];
+let user=localStorage.getItem("user");
+let data=JSON.parse(localStorage.getItem("donations"))||[];
 
-  // FILTER USER DATA
-  let userData = data.filter(d => d.name === user);
+let userData=data.filter(d=>d.user==user);
 
-  // SHOW HISTORY
-  userHistory.innerHTML = "";
-  userData.slice().reverse().forEach(d=>{
-    let div = document.createElement("div");
-    div.className="history-item";
-    div.innerHTML = `<span>₹${d.amount}</span>`;
-    userHistory.appendChild(div);
-  });
+history.innerHTML="";
+userData.forEach(d=>{
+history.innerHTML+=`<div class="history-item">₹${d.amt} | ${d.id}</div>`;
+});
 
-  // BADGES
-  let total = userData.reduce((s,d)=>s+d.amount,0);
+// BADGE
+let total=userData.reduce((s,d)=>s+d.amt,0);
+badge.innerText= total>5000?"Gold 🥇": total>2000?"Silver 🥈":"Bronze 🥉";
 
-  let badgeText = "No Badge";
-  if(total > 5000) badgeText = "🥇 Gold Donor";
-  else if(total > 2000) badgeText = "🥈 Silver Donor";
-  else if(total > 500) badgeText = "🥉 Bronze Donor";
+// IMPACT
+impact.innerText=`₹${total} → ${Math.floor(total/100)} meals provided`;
 
-  badge.innerText = badgeText;
+// TRANSPARENCY
+usage.innerHTML="";
+data.forEach(d=>{
+usage.innerHTML+=`<div>₹${d.amt} → Food distribution</div>`;
+});
+
+// VOLUNTEERS
+let vols=JSON.parse(localStorage.getItem("vols"))||[];
+volCount.innerText="Volunteers: "+vols.length;
+
+// BENEFICIARIES
+let bens=JSON.parse(localStorage.getItem("bens"))||[];
+benList.innerHTML="";
+bens.forEach(b=>benList.innerHTML+=`<div>${b}</div>`);
+}
+
+// VOLUNTEER
+function addVolunteer(){
+let vols=JSON.parse(localStorage.getItem("vols"))||[];
+vols.push(volName.value+" (ID:"+Date.now()+")");
+localStorage.setItem("vols",JSON.stringify(vols));
+update();
+}
+
+// BENEFICIARY
+function addBeneficiary(){
+let bens=JSON.parse(localStorage.getItem("bens"))||[];
+bens.push(benName.value+" (ID:"+Date.now()+")");
+localStorage.setItem("bens",JSON.stringify(bens));
+update();
+}
+
+// AI CHAT
+function chat(){
+let q=chatInput.value.toLowerCase();
+
+if(q.includes("donate")) chatOutput.innerText="Click donate box!";
+else if(q.includes("where")) chatOutput.innerText="Funds go to food & shelter";
+else if(q.includes("volunteer")) chatOutput.innerText="Join from dashboard!";
+else chatOutput.innerText="We help NGOs manage donations.";
 }
 
 // INIT
-updateNavbar();
+updateNav();
 update();
 
 </script>
