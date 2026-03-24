@@ -5,72 +5,133 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>NGO Platform</title>
 
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
 <style>
 body{
 margin:0;
-font-family:Arial;
+font-family:'Poppins';
 background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
 color:white;
 }
 
+/* NAVBAR */
 .navbar{
 display:flex;
 justify-content:space-between;
-padding:20px 40px;
+padding:20px 50px;
+align-items:center;
+}
+
+.navbar h2{
+font-weight:600;
 }
 
 .navbar button{
 margin-left:10px;
-padding:8px 15px;
+padding:8px 16px;
 border:none;
 border-radius:8px;
+background:rgba(255,255,255,0.1);
+color:white;
+cursor:pointer;
+transition:0.3s;
+}
+
+.navbar button:hover{
 background:#ff6b6b;
+}
+
+/* HERO */
+.hero{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:80px 60px;
+}
+
+.hero h1{
+font-size:48px;
+}
+
+.hero p{
+opacity:0.8;
+margin:20px 0;
+}
+
+.cta{
+padding:12px 25px;
+background:#00c9a7;
+border:none;
+border-radius:10px;
+cursor:pointer;
+font-size:16px;
+}
+
+/* GLASS CARD */
+.card{
+background:rgba(255,255,255,0.08);
+backdrop-filter:blur(10px);
+padding:25px;
+border-radius:20px;
+box-shadow:0 8px 32px rgba(0,0,0,0.3);
+margin:15px 0;
+}
+
+/* DONATE BOX */
+.donate-box input{
+width:100%;
+padding:12px;
+margin:10px 0;
+border:none;
+border-radius:10px;
+}
+
+.donate-box button{
+width:100%;
+padding:12px;
+background:#ff6b6b;
+border:none;
+border-radius:10px;
 color:white;
 cursor:pointer;
 }
 
-.hero{
-display:flex;
-justify-content:space-between;
-padding:60px;
+/* GRID */
+.grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+gap:20px;
+padding:40px 60px;
 }
 
-.card{
-background:rgba(255,255,255,0.1);
-padding:20px;
-border-radius:15px;
-margin:10px;
-}
-
-input{
-width:100%;
-padding:10px;
-margin:10px 0;
-}
-
-button.main{
-width:100%;
-background:#00c9a7;
-}
-
+/* SECTION */
 .section{display:none;}
 .active{display:block;}
 
+/* DASHBOARD */
 .history-item{
 display:flex;
 justify-content:space-between;
 padding:10px;
-border-bottom:1px solid #aaa;
+border-bottom:1px solid rgba(255,255,255,0.2);
 }
 
+/* CHAT */
 .chatbox{
 position:fixed;
 bottom:20px;
 right:20px;
-width:250px;
-background:#222;
-padding:10px;
-border-radius:10px;
+background:#1e1e1e;
+padding:15px;
+border-radius:15px;
+width:260px;
+}
+
+.chatbox input{
+width:100%;
+padding:8px;
+margin-bottom:8px;
 }
 </style>
 </head>
@@ -84,24 +145,25 @@ border-radius:10px;
 
 <!-- HOME -->
 <div id="home" class="section active">
-<div class="hero">
 
+<div class="hero">
 <div>
 <h1>Donate & Save Lives 🌍</h1>
-<p>Food, shelter & hope for everyone</p>
-<button onclick="show('login')">Get Started</button>
+<p>Every rupee creates impact. Help us provide food, shelter & hope.</p>
+<button class="cta" onclick="show('login')">Get Started</button>
 </div>
 
-<div class="card">
+<div class="card donate-box">
 <h3>Donate Now</h3>
-<input id="amount" placeholder="Enter amount">
-<button class="main" onclick="donate()">Donate</button>
+<input id="amount" placeholder="Enter amount ₹">
+<button onclick="donate()">Donate</button>
+</div>
 </div>
 
-</div>
+<div class="grid">
 
 <div class="card">
-<h3>Impact Tracker</h3>
+<h3>Impact</h3>
 <p id="impact"></p>
 </div>
 
@@ -112,33 +174,36 @@ border-radius:10px;
 
 <div class="card">
 <h3>Events</h3>
-<ul>
-<li>Food Drive - Mumbai</li>
-<li>Clothes Donation Camp</li>
-<li>Blood Donation Event</li>
-</ul>
+<p>Food Drive • Clothes Camp • Blood Donation</p>
+</div>
+
 </div>
 
 </div>
 
 <!-- LOGIN -->
 <div id="login" class="section">
+<div class="card" style="max-width:400px;margin:50px auto;">
 <h2>Login</h2>
-<input id="loginEmail">
-<input id="loginPass" type="password">
-<button onclick="login()">Login</button>
+<input id="loginEmail" placeholder="Email">
+<input id="loginPass" type="password" placeholder="Password">
+<button class="cta" onclick="login()">Login</button>
+</div>
 </div>
 
 <!-- SIGNUP -->
 <div id="signup" class="section">
+<div class="card" style="max-width:400px;margin:50px auto;">
 <h2>Signup</h2>
 <input id="signupEmail">
 <input id="signupPass" type="password">
-<button onclick="signup()">Signup</button>
+<button class="cta" onclick="signup()">Signup</button>
+</div>
 </div>
 
 <!-- DASHBOARD -->
 <div id="dashboard" class="section">
+<div class="grid">
 
 <div class="card">
 <h3>Your Donations</h3>
@@ -151,31 +216,31 @@ border-radius:10px;
 </div>
 
 <div class="card">
-<h3>Volunteer Signup</h3>
-<input id="volName" placeholder="Your Name">
+<h3>Volunteers</h3>
+<input id="volName">
 <button onclick="addVolunteer()">Join</button>
 <p id="volCount"></p>
 </div>
 
 <div class="card">
 <h3>Beneficiaries</h3>
-<input id="benName" placeholder="Beneficiary Name">
+<input id="benName">
 <button onclick="addBeneficiary()">Add</button>
 <div id="benList"></div>
 </div>
 
 </div>
+</div>
 
-<!-- CHATBOT -->
+<!-- CHAT -->
 <div class="chatbox">
-<input id="chatInput" placeholder="Ask AI...">
+<input id="chatInput" placeholder="Ask something...">
 <button onclick="chat()">Send</button>
 <p id="chatOutput"></p>
 </div>
 
 <script>
 
-// NAVBAR
 function updateNav(){
 let user=localStorage.getItem("user");
 let nav=document.getElementById("nav");
@@ -193,19 +258,17 @@ nav.innerHTML=`
 }
 }
 
-// NAVIGATION
 function show(id){
 document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
 document.getElementById(id).classList.add("active");
 update();
 }
 
-// AUTH
 function signup(){
 let users=JSON.parse(localStorage.getItem("users"))||[];
 users.push({email:signupEmail.value,pass:signupPass.value});
 localStorage.setItem("users",JSON.stringify(users));
-alert("Signup done");
+alert("Signup success");
 show("login");
 }
 
@@ -225,23 +288,17 @@ updateNav();
 show("home");
 }
 
-// DONATE
 function donate(){
 let user=localStorage.getItem("user");
-if(!user){alert("Login first");return show("login");}
+if(!user) return alert("Login first");
 
 let amt=Number(amount.value);
 let data=JSON.parse(localStorage.getItem("donations"))||[];
-
-let id="DON"+Date.now();
-data.push({user,amt,id});
-
+data.push({user,amt});
 localStorage.setItem("donations",JSON.stringify(data));
-alert("Donated!");
 update();
 }
 
-// UPDATE
 function update(){
 let user=localStorage.getItem("user");
 let data=JSON.parse(localStorage.getItem("donations"))||[];
@@ -250,59 +307,47 @@ let userData=data.filter(d=>d.user==user);
 
 history.innerHTML="";
 userData.forEach(d=>{
-history.innerHTML+=`<div class="history-item">₹${d.amt} | ${d.id}</div>`;
+history.innerHTML+=`<div class="history-item">₹${d.amt}</div>`;
 });
 
-// BADGE
 let total=userData.reduce((s,d)=>s+d.amt,0);
-badge.innerText= total>5000?"Gold 🥇": total>2000?"Silver 🥈":"Bronze 🥉";
+badge.innerText= total>5000?"🥇 Gold": total>2000?"🥈 Silver":"🥉 Bronze";
 
-// IMPACT
-impact.innerText=`₹${total} → ${Math.floor(total/100)} meals provided`;
+impact.innerText=`₹${total} → ${Math.floor(total/100)} meals`;
 
-// TRANSPARENCY
 usage.innerHTML="";
 data.forEach(d=>{
-usage.innerHTML+=`<div>₹${d.amt} → Food distribution</div>`;
+usage.innerHTML+=`<div>₹${d.amt} → Food</div>`;
 });
 
-// VOLUNTEERS
 let vols=JSON.parse(localStorage.getItem("vols"))||[];
 volCount.innerText="Volunteers: "+vols.length;
 
-// BENEFICIARIES
 let bens=JSON.parse(localStorage.getItem("bens"))||[];
 benList.innerHTML="";
 bens.forEach(b=>benList.innerHTML+=`<div>${b}</div>`);
 }
 
-// VOLUNTEER
 function addVolunteer(){
 let vols=JSON.parse(localStorage.getItem("vols"))||[];
-vols.push(volName.value+" (ID:"+Date.now()+")");
+vols.push(volName.value);
 localStorage.setItem("vols",JSON.stringify(vols));
 update();
 }
 
-// BENEFICIARY
 function addBeneficiary(){
 let bens=JSON.parse(localStorage.getItem("bens"))||[];
-bens.push(benName.value+" (ID:"+Date.now()+")");
+bens.push(benName.value);
 localStorage.setItem("bens",JSON.stringify(bens));
 update();
 }
 
-// AI CHAT
 function chat(){
 let q=chatInput.value.toLowerCase();
-
-if(q.includes("donate")) chatOutput.innerText="Click donate box!";
-else if(q.includes("where")) chatOutput.innerText="Funds go to food & shelter";
-else if(q.includes("volunteer")) chatOutput.innerText="Join from dashboard!";
-else chatOutput.innerText="We help NGOs manage donations.";
+if(q.includes("donate")) chatOutput.innerText="Use donate box!";
+else chatOutput.innerText="We help NGOs manage impact.";
 }
 
-// INIT
 updateNav();
 update();
 
