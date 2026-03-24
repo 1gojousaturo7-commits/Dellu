@@ -15,17 +15,13 @@ body{
   color:white;
 }
 
-/* NAVBAR */
 .nav{
   display:flex;
   justify-content:space-between;
   padding:20px 40px;
 }
 
-.logo{
-  font-weight:700;
-  font-size:22px;
-}
+.logo{font-weight:700;font-size:22px;}
 
 .nav button{
   margin-left:10px;
@@ -37,20 +33,11 @@ body{
   cursor:pointer;
 }
 
-/* HERO */
 .hero{
   display:flex;
   justify-content:space-between;
   align-items:center;
   padding:60px;
-}
-
-.hero h1{
-  font-size:48px;
-}
-
-.hero p{
-  opacity:0.8;
 }
 
 .glass{
@@ -60,7 +47,6 @@ body{
   backdrop-filter:blur(10px);
 }
 
-/* BUTTON */
 .primary{
   padding:12px 20px;
   border:none;
@@ -70,11 +56,7 @@ body{
   cursor:pointer;
 }
 
-/* DASHBOARD */
-.dashboard{
-  padding:40px;
-  display:none;
-}
+.dashboard{padding:40px;display:none;}
 
 .cards{
   display:grid;
@@ -88,7 +70,6 @@ body{
   background:rgba(255,255,255,0.1);
 }
 
-/* INPUT */
 input{
   padding:10px;
   width:100%;
@@ -97,7 +78,6 @@ input{
   border:none;
 }
 
-/* HISTORY */
 .history-item{
   display:flex;
   justify-content:space-between;
@@ -112,7 +92,6 @@ input{
 <!-- NAV -->
 <div class="nav">
   <div class="logo">❤️ NGO Impact</div>
-
   <div>
     <button onclick="showHome()">Home</button>
     <button id="loginBtn" onclick="showLogin()">Login</button>
@@ -124,10 +103,9 @@ input{
 
 <!-- HOME -->
 <div id="home" class="hero">
-
   <div>
     <h1>Donate & Save Lives 🌍</h1>
-    <p>Every ₹500 helps save a life. Be the reason someone smiles today.</p>
+    <p>Every ₹500 helps save a life</p>
     <button class="primary" onclick="showSignup()">Get Started</button>
   </div>
 
@@ -136,7 +114,6 @@ input{
     <input id="quickAmount" placeholder="Enter amount">
     <button class="primary" onclick="quickDonate()">Donate</button>
   </div>
-
 </div>
 
 <!-- LOGIN -->
@@ -194,10 +171,9 @@ input{
 
 <script>
 
-/* NAV CONTROL */
+/* NAV */
 function updateNav(){
   let user = localStorage.getItem("user");
-
   loginBtn.style.display = user ? "none" : "inline-block";
   signupBtn.style.display = user ? "none" : "inline-block";
   dashBtn.style.display = user ? "inline-block" : "none";
@@ -226,12 +202,10 @@ function showSignup(){
 
 function showDash(){
   if(!localStorage.getItem("user")) return alert("Login first");
-
   home.style.display="none";
   login.style.display="none";
   signup.style.display="none";
   dashboard.style.display="block";
-
   loadData();
 }
 
@@ -239,30 +213,28 @@ function showDash(){
 function signup(){
   let users = JSON.parse(localStorage.getItem("users"))||[];
 
-  users.push({
-    email:signupEmail.value,
-    pass:signupPass.value
-  });
+  if(users.find(u=>u.email===signupEmail.value)){
+    alert("User already exists");
+    return;
+  }
 
+  users.push({email:signupEmail.value,pass:signupPass.value});
   localStorage.setItem("users",JSON.stringify(users));
 
-  alert("Signup success!");
+  alert("Signup successful!");
   showLogin();
 }
 
 function login(){
   let users = JSON.parse(localStorage.getItem("users"))||[];
 
-  let user = users.find(u =>
-    u.email===loginEmail.value &&
-    u.pass===loginPass.value
-  );
+  let user = users.find(u=>u.email===loginEmail.value && u.pass===loginPass.value);
 
   if(user){
     localStorage.setItem("user",user.email);
     updateNav();
     showDash();
-  }else{
+  } else {
     alert("Invalid login");
   }
 }
@@ -279,11 +251,11 @@ function donate(){
   if(!user) return alert("Login required");
 
   let amt = Number(amount.value);
+  if(amt<=0) return alert("Enter valid amount");
 
   let data = JSON.parse(localStorage.getItem("donations"))||[];
 
   data.push({user,amt});
-
   localStorage.setItem("donations",JSON.stringify(data));
 
   loadData();
@@ -308,19 +280,15 @@ function loadData(){
   let userData = data.filter(d=>d.user===user);
 
   let total = userData.reduce((s,d)=>s+d.amt,0);
-
-  totalElem = document.getElementById("total");
-  totalElem.innerText = "₹"+total;
+  document.getElementById("total").innerText="₹"+total;
 
   let livesSaved = Math.floor(total/500);
   lives.innerText = livesSaved;
 
-  /* BADGES */
-  if(total > 5000) badge.innerText="🥇 Gold";
-  else if(total > 2000) badge.innerText="🥈 Silver";
+  if(total>5000) badge.innerText="🥇 Gold";
+  else if(total>2000) badge.innerText="🥈 Silver";
   else badge.innerText="🥉 Bronze";
 
-  /* HISTORY */
   history.innerHTML="";
   userData.reverse().forEach(d=>{
     let div=document.createElement("div");
