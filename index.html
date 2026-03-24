@@ -11,37 +11,83 @@
 body{
   margin:0;
   font-family:'Poppins';
-  background:linear-gradient(120deg,#0f2027,#203a43,#2c5364);
+  background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
   color:white;
 }
 
-/* SIDEBAR */
-.sidebar{
-  position:fixed;
-  width:220px;
-  height:100vh;
-  background:rgba(0,0,0,0.6);
-  padding-top:20px;
-  text-align:center;
+/* NAVBAR */
+.navbar{
+  display:flex;
+  justify-content:space-between;
+  padding:20px 40px;
+  background:rgba(0,0,0,0.5);
 }
 
-.sidebar button{
-  width:85%;
-  margin:10px;
-  padding:12px;
+.navbar button{
+  margin-left:10px;
+  padding:8px 15px;
   border:none;
-  border-radius:10px;
+  border-radius:8px;
   background:#ff6b6b;
   color:white;
   cursor:pointer;
 }
 
-/* MAIN */
-.main{
-  margin-left:220px;
-  padding:40px;
+/* HERO */
+.hero{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:60px;
 }
 
+.hero-text h1{
+  font-size:50px;
+  color:#ffb347;
+}
+
+.hero-text p{
+  max-width:400px;
+  opacity:0.8;
+}
+
+.cta{
+  margin-top:20px;
+  padding:12px 20px;
+  background:#00c9a7;
+  border:none;
+  border-radius:10px;
+  color:white;
+  cursor:pointer;
+}
+
+/* DONATE CARD */
+.donate-card{
+  background:rgba(255,255,255,0.1);
+  padding:20px;
+  border-radius:15px;
+  width:300px;
+  backdrop-filter:blur(10px);
+}
+
+.donate-card input{
+  width:100%;
+  padding:10px;
+  margin:10px 0;
+  border:none;
+  border-radius:8px;
+}
+
+.donate-card button{
+  width:100%;
+  padding:10px;
+  background:#ff6b6b;
+  border:none;
+  border-radius:10px;
+  color:white;
+}
+
+/* SECTIONS */
 .section{display:none;}
 .active{display:block;}
 
@@ -49,37 +95,10 @@ body{
   background:rgba(255,255,255,0.08);
   padding:20px;
   border-radius:15px;
-  margin-top:20px;
-  backdrop-filter:blur(10px);
+  margin:20px;
 }
 
-.hero{
-  display:flex;
-  justify-content:space-between;
-}
-
-.hero h1{
-  font-size:38px;
-  color:#ffb347;
-}
-
-input{
-  width:100%;
-  padding:12px;
-  margin:10px 0;
-  border:none;
-  border-radius:8px;
-}
-
-button{
-  padding:12px;
-  background:#ff6b6b;
-  border:none;
-  border-radius:10px;
-  color:white;
-  cursor:pointer;
-}
-
+/* DASHBOARD */
 .history-item{
   display:flex;
   justify-content:space-between;
@@ -91,36 +110,39 @@ button{
 
 <body>
 
-<div class="sidebar">
-<h2>❤️ NGO</h2>
-<button onclick="show('home')">Home</button>
-<button onclick="show('login')">Login</button>
-<button onclick="show('signup')">Signup</button>
-
-<button id="dashboardBtn" onclick="show('dashboard')" style="display:none;">Dashboard</button>
-
-<button onclick="logout()">Logout</button>
+<!-- NAVBAR -->
+<div class="navbar">
+  <h2>❤️ NGO</h2>
+  <div>
+    <button onclick="show('home')">Home</button>
+    <button onclick="show('login')">Login</button>
+    <button onclick="show('signup')">Signup</button>
+    <button id="dashboardBtn" onclick="show('dashboard')" style="display:none;">Dashboard</button>
+    <button onclick="logout()">Logout</button>
+  </div>
 </div>
-
-<div class="main">
 
 <!-- HOME -->
 <div id="home" class="section active">
 <div class="hero">
-<div>
-<h1>Saving Lives, One Step at a Time 🌍</h1>
-<p>Your small help can change someone's entire future.</p>
+
+<div class="hero-text">
+<h1>Donate & Save Lives 🌍</h1>
+<p>Every contribution counts. Help us provide food, shelter, and hope to those who need it most.</p>
+<button class="cta" onclick="show('signup')">Get Started</button>
 </div>
 
-<div class="glass">
-<p>Funds: ₹<span id="funds">0</span></p>
-<p>Lives Saved: <span id="lives">0</span></p>
+<div class="donate-card">
+<h3>Donate Now</h3>
+<input id="quickAmount" type="number" placeholder="Enter amount">
+<button onclick="quickDonate()">Donate</button>
 </div>
+
 </div>
 </div>
 
 <!-- LOGIN -->
-<div id="login" class="section">
+<div id="login" class="section glass">
 <h2>Login</h2>
 <input id="loginEmail" placeholder="Email">
 <input id="loginPass" type="password" placeholder="Password">
@@ -128,7 +150,7 @@ button{
 </div>
 
 <!-- SIGNUP -->
-<div id="signup" class="section">
+<div id="signup" class="section glass">
 <h2>Signup</h2>
 <input id="signupEmail" placeholder="Email">
 <input id="signupPass" type="password" placeholder="Password">
@@ -151,15 +173,11 @@ button{
 
 </div>
 
-</div>
-
 <script>
-const BASE_URL = "https://ngo-backend-5zc1.onrender.com";
+const BASE_URL="https://ngo-backend-5zc1.onrender.com";
 
-/* SHOW SECTION */
+/* NAVIGATION */
 function show(id){
-
-  // 🔐 protect dashboard
   if(id==="dashboard" && !localStorage.getItem("token")){
     alert("Login first!");
     show("login");
@@ -172,19 +190,16 @@ function show(id){
   update();
 }
 
-/* AUTH UI CONTROL */
+/* AUTH UI */
 function updateAuthUI(){
-  let token = localStorage.getItem("token");
-  let dashboardBtn = document.getElementById("dashboardBtn");
+  let token=localStorage.getItem("token");
+  let btn=document.getElementById("dashboardBtn");
 
   if(token){
-    dashboardBtn.style.display="block";
+    btn.style.display="inline-block";
   } else {
-    dashboardBtn.style.display="none";
-
-    if(document.getElementById("dashboard").classList.contains("active")){
-      show("home");
-    }
+    btn.style.display="none";
+    show("home");
   }
 }
 
@@ -200,12 +215,12 @@ async function signup(){
   });
 
   alert("Account created!");
-  show("login"); // redirect
+  show("login");
 }
 
 /* LOGIN */
 async function login(){
-  let res = await fetch(`${BASE_URL}/api/auth/login`,{
+  let res=await fetch(`${BASE_URL}/api/auth/login`,{
     method:"POST",
     headers:{"Content-Type":"application/json"},
     body:JSON.stringify({
@@ -214,27 +229,24 @@ async function login(){
     })
   });
 
-  let data = await res.json();
+  let data=await res.json();
 
   if(data.token){
     localStorage.setItem("token",data.token);
     updateAuthUI();
     show("dashboard");
-  } else {
-    alert("Login failed");
-  }
+  } else alert("Login failed");
 }
 
 /* LOGOUT */
 function logout(){
   localStorage.removeItem("token");
   updateAuthUI();
-  show("home");
 }
 
 /* DONATE */
 async function donate(){
-  let token = localStorage.getItem("token");
+  let token=localStorage.getItem("token");
 
   if(!token){
     alert("Login first!");
@@ -257,31 +269,32 @@ async function donate(){
   update();
 }
 
-/* FETCH DATA */
-async function update(){
-  try{
-    let res = await fetch(`${BASE_URL}/api/donations`);
-    let data = await res.json();
-
-    let total = data.reduce((s,d)=>s+d.amount,0);
-
-    funds.innerText = total;
-    lives.innerText = Math.floor(total/500000);
-
-    let token = localStorage.getItem("token");
-    if(!token) return;
-
-    history.innerHTML="";
-    data.forEach(d=>{
-      let div=document.createElement("div");
-      div.className="history-item";
-      div.innerHTML=`₹${d.amount}`;
-      history.appendChild(div);
-    });
-
-  }catch(err){
-    console.log(err);
+/* QUICK DONATE FROM HOME */
+function quickDonate(){
+  if(!localStorage.getItem("token")){
+    alert("Login first!");
+    show("login");
+    return;
   }
+
+  amount.value = quickAmount.value;
+  show("dashboard");
+}
+
+/* UPDATE DATA */
+async function update(){
+  let res=await fetch(`${BASE_URL}/api/donations`);
+  let data=await res.json();
+
+  if(!localStorage.getItem("token")) return;
+
+  history.innerHTML="";
+  data.forEach(d=>{
+    let div=document.createElement("div");
+    div.className="history-item";
+    div.innerHTML=`₹${d.amount}`;
+    history.appendChild(div);
+  });
 }
 
 /* INIT */
