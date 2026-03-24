@@ -136,11 +136,6 @@ button{
 <input id="loginEmail" placeholder="Email">
 <input id="loginPass" type="password" placeholder="Password">
 <button onclick="login()">Login</button>
-
-<!-- GOOGLE LOGIN BUTTON -->
-<button onclick="googleLogin()" style="background:white;color:black;">
-Sign in with Google
-</button>
 </div>
 
 <!-- SIGNUP -->
@@ -173,9 +168,11 @@ Sign in with Google
 const API="https://ngo-backend-5zc1.onrender.com/api";
 
 function show(id){
-  document.querySelectorAll("body > div").forEach(d=>{
-    if(d.id) d.style.display="none";
-  });
+  document.getElementById("home").style.display="none";
+  document.getElementById("login").style.display="none";
+  document.getElementById("signup").style.display="none";
+  document.getElementById("dashboard").style.display="none";
+
   document.getElementById(id).style.display="block";
 }
 
@@ -222,12 +219,9 @@ async function login(){
     updateUI();
     show("dashboard");
     loadHistory();
+  } else {
+    alert("Login failed");
   }
-}
-
-/* GOOGLE LOGIN (UI HOOK) */
-function googleLogin(){
-  alert("Connect Google OAuth backend");
 }
 
 /* LOGOUT */
@@ -244,7 +238,6 @@ async function donate(){
   document.getElementById("impactText").innerText =
     "₹"+amount+" = "+Math.floor(amount/500)+" meals 🍛";
 
-  // SMART SUGGESTION
   if(amount<100) suggestion.innerText="Try ₹500 to feed 1 family";
   else suggestion.innerText="You're making a big impact ❤️";
 
@@ -264,6 +257,7 @@ async function donate(){
     body:JSON.stringify({amount})
   });
 
+  alert("Donation successful ❤️");
   loadHistory();
 }
 
@@ -285,7 +279,6 @@ async function loadHistory(){
     history.innerHTML+=`<div>₹${d.amount}</div>`;
   });
 
-  // BADGE SYSTEM
   let b="Bronze";
   if(total>5000) b="Silver";
   if(total>20000) b="Gold";
@@ -293,10 +286,19 @@ async function loadHistory(){
   badge.innerHTML=`<span class="badge">${b} Donor</span>`;
 }
 
-/* CHATBOT */
-function chat(){
-  let q=prompt("Ask anything about donations");
-  alert("AI: Your money helps real people ❤️");
+/* AI CHATBOT */
+async function chat(){
+  let msg=prompt("Ask about donations");
+
+  let res=await fetch(API+"/ai",{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({message:msg})
+  });
+
+  let data=await res.json();
+
+  alert("AI: "+data.reply);
 }
 
 updateUI();
