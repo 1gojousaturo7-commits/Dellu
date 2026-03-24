@@ -3,143 +3,103 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>NGO Platform</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 
 <style>
-*{margin:0;padding:0;box-sizing:border-box;}
-body{
+body {
+  margin:0;
   font-family:'Poppins';
+  background:linear-gradient(120deg,#0f2027,#203a43,#2c5364);
   color:white;
-  min-height:100vh;
-  background:linear-gradient(-45deg,#1b5e20,#43a047,#66bb6a,#2e7d32);
-  background-size:400% 400%;
-  animation:gradient 10s ease infinite;
-}
-
-@keyframes gradient{
-  0%{background-position:0% 50%;}
-  50%{background-position:100% 50%;}
-  100%{background-position:0% 50%;}
 }
 
 /* SIDEBAR */
-.sidebar{
+.sidebar {
   position:fixed;
   width:220px;
-  height:100%;
-  backdrop-filter:blur(10px);
-  background:rgba(0,0,0,0.3);
-  display:flex;
-  flex-direction:column;
-  align-items:center;
+  height:100vh;
+  background:rgba(0,0,0,0.6);
   padding-top:20px;
-  gap:15px;
+  text-align:center;
 }
 
-.sidebar h2{margin-bottom:10px;}
-
-.sidebar button{
+.sidebar button {
   width:85%;
+  margin:10px;
   padding:12px;
   border:none;
-  border-radius:12px;
-  background:rgba(255,255,255,0.2);
+  border-radius:10px;
+  background:#ff6b6b;
   color:white;
   cursor:pointer;
-  transition:0.3s;
-}
-
-.sidebar button:hover{
-  background:white;
-  color:#1b5e20;
-  transform:scale(1.05);
 }
 
 /* MAIN */
-.main{
+.main {
   margin-left:220px;
   padding:40px;
 }
 
-.section{display:none;}
-.active{display:block;}
+.section { display:none; }
+.active { display:block; }
 
-/* GLASS CARD */
-.glass{
-  background:rgba(255,255,255,0.15);
-  backdrop-filter:blur(12px);
-  border-radius:20px;
+/* GLASS EFFECT */
+.glass {
+  background:rgba(255,255,255,0.08);
   padding:20px;
+  border-radius:15px;
   margin-top:20px;
-  box-shadow:0 8px 30px rgba(0,0,0,0.2);
+  backdrop-filter:blur(10px);
 }
 
 /* HERO */
-.hero{
+.hero {
   display:flex;
   justify-content:space-between;
-  align-items:center;
-  gap:40px;
 }
 
-.hero h1{
-  font-size:2.5rem;
+.hero h1 {
+  font-size:40px;
+  color:#ffb347;
 }
 
 /* INPUT */
-input{
+input {
   width:100%;
   padding:12px;
   margin:10px 0;
   border:none;
-  border-radius:10px;
+  border-radius:8px;
 }
 
 /* BUTTON */
-button{
+button {
   padding:12px;
+  background:#ff6b6b;
   border:none;
   border-radius:10px;
+  color:white;
   cursor:pointer;
 }
 
 /* CARDS */
-.cards{
+.cards {
   display:grid;
   grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
   gap:20px;
-  margin-top:20px;
 }
 
-.card{
+.card {
   padding:20px;
-  border-radius:20px;
-  text-align:center;
-  background:linear-gradient(135deg,#43a047,#2e7d32);
-  box-shadow:0 10px 20px rgba(0,0,0,0.3);
-}
-
-.card h3{
-  font-size:2rem;
-}
-
-/* PROGRESS */
-.progress{
-  background:#ddd;
-  border-radius:10px;
-  overflow:hidden;
-}
-
-.progress-bar{
-  height:20px;
-  background:#00e676;
-  width:0%;
+  border-radius:15px;
+  background:linear-gradient(135deg,#ff6b6b,#f06595);
 }
 
 /* HISTORY */
-.history-item{
+.history-item {
   display:flex;
   justify-content:space-between;
   padding:10px;
@@ -151,12 +111,12 @@ button{
 <body>
 
 <div class="sidebar">
-  <h2>🌿 NGO</h2>
-  <button onclick="show('home')">🏠 Home</button>
-  <button onclick="show('login')">🔐 Login</button>
-  <button onclick="show('signup')">➕ Signup</button>
-  <button onclick="show('dashboard')">📊 Dashboard</button>
-  <button onclick="logout()">🚪 Logout</button>
+<h2>❤️ NGO</h2>
+<button onclick="show('home')">Home</button>
+<button onclick="show('login')">Login</button>
+<button onclick="show('signup')">Signup</button>
+<button onclick="show('dashboard')">Dashboard</button>
+<button onclick="logout()">Logout</button>
 </div>
 
 <div class="main">
@@ -164,50 +124,36 @@ button{
 <!-- HOME -->
 <div id="home" class="section active">
 <div class="hero">
-  <div>
-    <h1>Make a Difference 🌍</h1>
-    <p>Together we build a greener future</p>
-  </div>
 
-  <div class="glass">
-    <h3>Impact</h3>
-    <p>Funds: ₹<span id="homeFundsCard">0</span></p>
-    <p>Lives: <span id="homeLivesCard">0</span></p>
-  </div>
-</div>
-
-<div class="cards">
-  <div class="card"><h3 id="homeFundsCard2">₹0</h3><p>Total Funds</p></div>
-  <div class="card"><h3 id="homeLivesCard2">0</h3><p>Lives Impacted</p></div>
+<div>
+<h1>Saving Lives, One Step at a Time 🌍</h1>
+<p>Your small help can change someone's entire future.</p>
+<button onclick="show('signup')">Join Us</button>
 </div>
 
 <div class="glass">
-  <h3>🎯 Goal: 10,000 Lives</h3>
-  <p id="homeGoalText"></p>
-  <div class="progress">
-    <div id="homeProgressBar" class="progress-bar"></div>
-  </div>
+<h3>Impact</h3>
+<p>Funds: ₹<span id="funds">0</span></p>
+<p>Lives Saved: <span id="lives">0</span></p>
+</div>
+
 </div>
 </div>
 
 <!-- LOGIN -->
 <div id="login" class="section">
-<div class="glass">
 <h2>Login</h2>
 <input id="loginEmail" placeholder="Email">
 <input id="loginPass" type="password" placeholder="Password">
 <button onclick="login()">Login</button>
 </div>
-</div>
 
 <!-- SIGNUP -->
 <div id="signup" class="section">
-<div class="glass">
 <h2>Signup</h2>
 <input id="signupEmail" placeholder="Email">
 <input id="signupPass" type="password" placeholder="Password">
 <button onclick="signup()">Signup</button>
-</div>
 </div>
 
 <!-- DASHBOARD -->
@@ -215,12 +161,12 @@ button{
 
 <div class="glass">
 <h3>Donate</h3>
-<input id="donationAmount" type="number" placeholder="Amount">
+<input id="amount" type="number" placeholder="Enter amount">
 <button onclick="donate()">Donate</button>
 </div>
 
 <div class="glass">
-<h3>Donation History</h3>
+<h3>Your Donations</h3>
 <div id="history"></div>
 </div>
 
@@ -229,71 +175,73 @@ button{
 </div>
 
 <script>
-const BASE_URL = "https://ngo-backend-5zc1.onrender.com";
-
 function show(id){
   document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
   document.getElementById(id).classList.add("active");
+  update();
 }
 
-function logout(){
-  localStorage.clear();
-  alert("Logged out");
-  show("login");
-}
-
-// SIGNUP
+/* SIGNUP */
 async function signup(){
-  const res = await fetch(`${BASE_URL}/api/auth/signup`, {
+  let res = await fetch("https://ngo-backend-5zc1.onrender.com/api/auth/signup",{
     method:"POST",
-    headers:{ "Content-Type":"application/json" },
-    body: JSON.stringify({
-      name: signupEmail.value,
-      email: signupEmail.value,
-      password: signupPass.value
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({
+      email:signupEmail.value,
+      password:signupPass.value
     })
   });
 
-  const data = await res.json();
-  alert(data.message);
+  alert("Account created!");
+  show("login"); // ✅ redirect after signup
 }
 
-// LOGIN
+/* LOGIN */
 async function login(){
-  const res = await fetch(`${BASE_URL}/api/auth/login`, {
+  let res = await fetch("https://ngo-backend-5zc1.onrender.com/api/auth/login",{
     method:"POST",
-    headers:{ "Content-Type":"application/json" },
-    body: JSON.stringify({
-      email: loginEmail.value,
-      password: loginPass.value
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({
+      email:loginEmail.value,
+      password:loginPass.value
     })
   });
 
-  const data = await res.json();
+  let data = await res.json();
 
-  if(res.ok){
-    localStorage.setItem("token", data.token);
-    localStorage.setItem("currentUser", data.name);
+  if(data.token){
+    localStorage.setItem("token",data.token);
     show("dashboard");
-    update();
   } else {
-    alert(data.message);
+    alert("Login failed");
   }
 }
 
-// DONATE
-async function donate(){
-  let amount = Number(donationAmount.value);
+/* LOGOUT */
+function logout(){
+  localStorage.removeItem("token");
+  alert("Logged out");
+  show("home");
+}
 
-  await fetch(`${BASE_URL}/api/donations`, {
+/* DONATE */
+async function donate(){
+  let token = localStorage.getItem("token");
+
+  if(!token){
+    alert("Login first!");
+    show("login");
+    return;
+  }
+
+  let res = await fetch("https://ngo-backend-5zc1.onrender.com/api/donations",{
     method:"POST",
     headers:{
       "Content-Type":"application/json",
-      "Authorization": localStorage.getItem("token")
+      "Authorization":token
     },
-    body: JSON.stringify({
-      name: localStorage.getItem("currentUser"),
-      amount
+    body:JSON.stringify({
+      amount:Number(amount.value)
     })
   });
 
@@ -301,33 +249,24 @@ async function donate(){
   update();
 }
 
-// UPDATE
+/* UPDATE UI */
 async function update(){
-  const res = await fetch(`${BASE_URL}/api/donations`, {
-    headers:{
-      "Authorization": localStorage.getItem("token")
-    }
-  });
-
-  const data = await res.json();
+  let res = await fetch("https://ngo-backend-5zc1.onrender.com/api/donations");
+  let data = await res.json();
 
   let total = data.reduce((s,d)=>s+d.amount,0);
-  let lives = Math.floor(total/500000);
+  funds.innerText = total;
+  lives.innerText = Math.floor(total/500000);
 
-  document.getElementById("homeFundsCard").innerText=total;
-  document.getElementById("homeLivesCard").innerText=lives;
-  document.getElementById("homeFundsCard2").innerText="₹"+total;
-  document.getElementById("homeLivesCard2").innerText=lives;
-
-  let percent=Math.min((lives/10000)*100,100);
-  homeProgressBar.style.width=percent+"%";
-  homeGoalText.innerText=`${lives}/10000 Lives`;
+  let token = localStorage.getItem("token");
+  if(!token) return;
 
   history.innerHTML="";
   data.forEach(d=>{
-    history.innerHTML+=`<div class="history-item">
-      <span>${d.name}</span><span>₹${d.amount}</span>
-    </div>`;
+    let div=document.createElement("div");
+    div.className="history-item";
+    div.innerHTML=`₹${d.amount}`;
+    history.appendChild(div);
   });
 }
 
