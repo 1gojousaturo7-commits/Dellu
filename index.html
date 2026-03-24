@@ -15,13 +15,17 @@ body{
   color:white;
 }
 
+/* NAV */
 .nav{
   display:flex;
   justify-content:space-between;
   padding:20px 40px;
 }
 
-.logo{font-weight:700;font-size:22px;}
+.logo{
+  font-weight:700;
+  font-size:22px;
+}
 
 .nav button{
   margin-left:10px;
@@ -33,6 +37,7 @@ body{
   cursor:pointer;
 }
 
+/* HERO */
 .hero{
   display:flex;
   justify-content:space-between;
@@ -40,6 +45,7 @@ body{
   padding:60px;
 }
 
+/* GLASS */
 .glass{
   background:rgba(255,255,255,0.1);
   padding:25px;
@@ -47,6 +53,7 @@ body{
   backdrop-filter:blur(10px);
 }
 
+/* BUTTON */
 .primary{
   padding:12px 20px;
   border:none;
@@ -56,7 +63,11 @@ body{
   cursor:pointer;
 }
 
-.dashboard{padding:40px;display:none;}
+/* DASHBOARD */
+.dashboard{
+  padding:40px;
+  display:none;
+}
 
 .cards{
   display:grid;
@@ -70,6 +81,7 @@ body{
   background:rgba(255,255,255,0.1);
 }
 
+/* INPUT */
 input{
   padding:10px;
   width:100%;
@@ -78,6 +90,7 @@ input{
   border:none;
 }
 
+/* HISTORY */
 .history-item{
   display:flex;
   justify-content:space-between;
@@ -89,9 +102,10 @@ input{
 
 <body>
 
-<!-- NAV -->
+<!-- NAVBAR -->
 <div class="nav">
   <div class="logo">❤️ NGO Impact</div>
+
   <div>
     <button onclick="showHome()">Home</button>
     <button id="loginBtn" onclick="showLogin()">Login</button>
@@ -105,7 +119,7 @@ input{
 <div id="home" class="hero">
   <div>
     <h1>Donate & Save Lives 🌍</h1>
-    <p>Every ₹500 helps save a life</p>
+    <p>Every ₹500 helps save a life. Be the reason someone smiles today.</p>
     <button class="primary" onclick="showSignup()">Get Started</button>
   </div>
 
@@ -171,67 +185,73 @@ input{
 
 <script>
 
-/* NAV */
+/* NAV CONTROL */
 function updateNav(){
   let user = localStorage.getItem("user");
-  loginBtn.style.display = user ? "none" : "inline-block";
-  signupBtn.style.display = user ? "none" : "inline-block";
-  dashBtn.style.display = user ? "inline-block" : "none";
-  logoutBtn.style.display = user ? "inline-block" : "none";
+
+  document.getElementById("loginBtn").style.display = user ? "none" : "inline-block";
+  document.getElementById("signupBtn").style.display = user ? "none" : "inline-block";
+  document.getElementById("dashBtn").style.display = user ? "inline-block" : "none";
+  document.getElementById("logoutBtn").style.display = user ? "inline-block" : "none";
 }
 
 /* PAGE SWITCH */
 function showHome(){
-  home.style.display="flex";
-  login.style.display="none";
-  signup.style.display="none";
-  dashboard.style.display="none";
+  document.getElementById("home").style.display="flex";
+  document.getElementById("login").style.display="none";
+  document.getElementById("signup").style.display="none";
+  document.getElementById("dashboard").style.display="none";
 }
 
 function showLogin(){
-  home.style.display="none";
-  login.style.display="flex";
-  signup.style.display="none";
+  document.getElementById("home").style.display="none";
+  document.getElementById("login").style.display="flex";
+  document.getElementById("signup").style.display="none";
 }
 
 function showSignup(){
-  home.style.display="none";
-  signup.style.display="flex";
-  login.style.display="none";
+  document.getElementById("home").style.display="none";
+  document.getElementById("signup").style.display="flex";
+  document.getElementById("login").style.display="none";
 }
 
 function showDash(){
   if(!localStorage.getItem("user")) return alert("Login first");
-  home.style.display="none";
-  login.style.display="none";
-  signup.style.display="none";
-  dashboard.style.display="block";
+
+  document.getElementById("home").style.display="none";
+  document.getElementById("login").style.display="none";
+  document.getElementById("signup").style.display="none";
+  document.getElementById("dashboard").style.display="block";
+
   loadData();
 }
 
 /* AUTH */
 function signup(){
-  let users = JSON.parse(localStorage.getItem("users"))||[];
+  let users = JSON.parse(localStorage.getItem("users")) || [];
 
   if(users.find(u=>u.email===signupEmail.value)){
     alert("User already exists");
     return;
   }
 
-  users.push({email:signupEmail.value,pass:signupPass.value});
-  localStorage.setItem("users",JSON.stringify(users));
+  users.push({email:signupEmail.value, pass:signupPass.value});
+  localStorage.setItem("users", JSON.stringify(users));
 
   alert("Signup successful!");
   showLogin();
 }
 
 function login(){
-  let users = JSON.parse(localStorage.getItem("users"))||[];
+  let users = JSON.parse(localStorage.getItem("users")) || [];
 
-  let user = users.find(u=>u.email===loginEmail.value && u.pass===loginPass.value);
+  let user = users.find(u =>
+    u.email === loginEmail.value &&
+    u.pass === loginPass.value
+  );
 
   if(user){
-    localStorage.setItem("user",user.email);
+    localStorage.setItem("user", user.email);
     updateNav();
     showDash();
   } else {
@@ -245,18 +265,18 @@ function logout(){
   showHome();
 }
 
-/* DONATION */
+/* DONATIONS */
 function donate(){
   let user = localStorage.getItem("user");
   if(!user) return alert("Login required");
 
-  let amt = Number(amount.value);
-  if(amt<=0) return alert("Enter valid amount");
+  let amt = Number(document.getElementById("amount").value);
+  if(amt <= 0) return alert("Enter valid amount");
 
-  let data = JSON.parse(localStorage.getItem("donations"))||[];
+  let data = JSON.parse(localStorage.getItem("donations")) || [];
 
-  data.push({user,amt});
-  localStorage.setItem("donations",JSON.stringify(data));
+  data.push({user, amt});
+  localStorage.setItem("donations", JSON.stringify(data));
 
   loadData();
 }
@@ -268,37 +288,43 @@ function quickDonate(){
     return;
   }
 
-  amount.value = quickAmount.value;
+  document.getElementById("amount").value = document.getElementById("quickAmount").value;
   donate();
 }
 
-/* LOAD DATA */
+/* LOAD USER DATA */
 function loadData(){
   let user = localStorage.getItem("user");
-  let data = JSON.parse(localStorage.getItem("donations"))||[];
+  let data = JSON.parse(localStorage.getItem("donations")) || [];
 
-  let userData = data.filter(d=>d.user===user);
+  let userData = data.filter(d => d.user === user);
 
   let total = userData.reduce((s,d)=>s+d.amt,0);
-  document.getElementById("total").innerText="₹"+total;
+  document.getElementById("total").innerText = "₹" + total;
 
-  let livesSaved = Math.floor(total/500);
-  lives.innerText = livesSaved;
+  let lives = Math.floor(total/500);
+  document.getElementById("lives").innerText = lives;
 
-  if(total>5000) badge.innerText="🥇 Gold";
-  else if(total>2000) badge.innerText="🥈 Silver";
-  else badge.innerText="🥉 Bronze";
+  let badge = "🥉 Bronze";
+  if(total > 5000) badge="🥇 Gold";
+  else if(total > 2000) badge="🥈 Silver";
 
-  history.innerHTML="";
+  document.getElementById("badge").innerText = badge;
+
+  let history = document.getElementById("history");
+  history.innerHTML = "";
+
   userData.reverse().forEach(d=>{
-    let div=document.createElement("div");
-    div.className="history-item";
-    div.innerHTML=`<span>₹${d.amt}</span>`;
+    let div = document.createElement("div");
+    div.className = "history-item";
+    div.innerHTML = `<span>₹${d.amt}</span>`;
     history.appendChild(div);
   });
 }
 
+/* INITIAL LOAD */
 updateNav();
+showHome();
 
 </script>
 
