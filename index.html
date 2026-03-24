@@ -2,327 +2,223 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<title>NGO Impact</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NGO Impact Platform</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 
 <style>
-body{
-  margin:0;
-  font-family:'Poppins',sans-serif;
-  background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
-  color:white;
+body {
+  margin: 0;
+  font-family: Arial;
+  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+  color: white;
 }
 
-/* NAV */
-.nav{
-  display:flex;
-  justify-content:space-between;
-  padding:20px 40px;
+header {
+  display: flex;
+  justify-content: space-between;
+  padding: 20px;
 }
 
-.logo{
-  font-weight:700;
-  font-size:22px;
+button {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
 }
 
-.nav button{
-  margin-left:10px;
-  padding:10px 16px;
-  border:none;
-  border-radius:20px;
-  background:#ff6b6b;
-  color:white;
-  cursor:pointer;
+.btn {
+  background: #ff6b6b;
+  color: white;
+  margin-left: 10px;
 }
 
-/* HERO */
-.hero{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:60px;
+.container {
+  padding: 40px;
 }
 
-/* GLASS */
-.glass{
-  background:rgba(255,255,255,0.1);
-  padding:25px;
-  border-radius:20px;
-  backdrop-filter:blur(10px);
+.card {
+  background: rgba(255,255,255,0.1);
+  padding: 20px;
+  margin-top: 20px;
+  border-radius: 10px;
 }
 
-/* BUTTON */
-.primary{
-  padding:12px 20px;
-  border:none;
-  border-radius:20px;
-  background:#00c9a7;
-  color:white;
-  cursor:pointer;
-}
-
-/* DASHBOARD */
-.dashboard{
-  padding:40px;
-  display:none;
-}
-
-.cards{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-  gap:20px;
-}
-
-.card{
-  padding:20px;
-  border-radius:20px;
-  background:rgba(255,255,255,0.1);
-}
-
-/* INPUT */
-input{
-  padding:10px;
-  width:100%;
-  margin:10px 0;
-  border-radius:10px;
-  border:none;
-}
-
-/* HISTORY */
-.history-item{
-  display:flex;
-  justify-content:space-between;
-  padding:8px 0;
-  border-bottom:1px solid rgba(255,255,255,0.2);
+input {
+  padding: 10px;
+  margin: 5px;
+  width: 200px;
 }
 </style>
 </head>
 
 <body>
 
-<!-- NAVBAR -->
-<div class="nav">
-  <div class="logo">❤️ NGO Impact</div>
+<header>
+  <h2>❤️ NGO Impact</h2>
 
-  <div>
-    <button onclick="showHome()">Home</button>
-    <button id="loginBtn" onclick="showLogin()">Login</button>
-    <button id="signupBtn" onclick="showSignup()">Signup</button>
-    <button id="dashBtn" style="display:none;" onclick="showDash()">Dashboard</button>
-    <button id="logoutBtn" style="display:none;" onclick="logout()">Logout</button>
+  <div id="nav">
+    <button class="btn" onclick="showHome()">Home</button>
+    <button class="btn" id="loginBtn" onclick="showLogin()">Login</button>
+    <button class="btn" id="signupBtn" onclick="showSignup()">Signup</button>
+    <button class="btn" id="dashboardBtn" onclick="showDashboard()" style="display:none;">Dashboard</button>
+    <button class="btn" id="logoutBtn" onclick="logout()" style="display:none;">Logout</button>
   </div>
-</div>
+</header>
 
-<!-- HOME -->
-<div id="home" class="hero">
-  <div>
-    <h1>Donate & Save Lives 🌍</h1>
-    <p>Every ₹500 helps save a life. Be the reason someone smiles today.</p>
-    <button class="primary" onclick="showSignup()">Get Started</button>
-  </div>
-
-  <div class="glass">
-    <h3>Quick Donate</h3>
-    <input id="quickAmount" placeholder="Enter amount">
-    <button class="primary" onclick="quickDonate()">Donate</button>
-  </div>
-</div>
-
-<!-- LOGIN -->
-<div id="login" class="hero" style="display:none;">
-  <div class="glass">
-    <h2>Login</h2>
-    <input id="loginEmail" placeholder="Email">
-    <input id="loginPass" type="password" placeholder="Password">
-    <button class="primary" onclick="login()">Login</button>
-  </div>
-</div>
-
-<!-- SIGNUP -->
-<div id="signup" class="hero" style="display:none;">
-  <div class="glass">
-    <h2>Signup</h2>
-    <input id="signupEmail" placeholder="Email">
-    <input id="signupPass" type="password" placeholder="Password">
-    <button class="primary" onclick="signup()">Signup</button>
-  </div>
-</div>
-
-<!-- DASHBOARD -->
-<div id="dashboard" class="dashboard">
-
-  <div class="cards">
-    <div class="card">
-      <h3 id="total">₹0</h3>
-      <p>Total Donations</p>
-    </div>
-
-    <div class="card">
-      <h3 id="lives">0</h3>
-      <p>Lives Saved</p>
-    </div>
-
-    <div class="card">
-      <h3 id="badge">🥉</h3>
-      <p>Your Badge</p>
-    </div>
-  </div>
-
-  <div class="glass" style="margin-top:30px;">
-    <h3>Donate</h3>
-    <input id="amount" placeholder="Amount">
-    <button class="primary" onclick="donate()">Donate</button>
-  </div>
-
-  <div class="glass" style="margin-top:30px;">
-    <h3>Your Donations</h3>
-    <div id="history"></div>
-  </div>
-
-</div>
+<div class="container" id="app"></div>
 
 <script>
+const API = "https://ngo-backend-5zc1.onrender.com";
+let token = localStorage.getItem("token");
 
-/* NAV CONTROL */
-function updateNav(){
-  let user = localStorage.getItem("user");
-
-  document.getElementById("loginBtn").style.display = user ? "none" : "inline-block";
-  document.getElementById("signupBtn").style.display = user ? "none" : "inline-block";
-  document.getElementById("dashBtn").style.display = user ? "inline-block" : "none";
-  document.getElementById("logoutBtn").style.display = user ? "inline-block" : "none";
-}
-
-/* PAGE SWITCH */
-function showHome(){
-  document.getElementById("home").style.display="flex";
-  document.getElementById("login").style.display="none";
-  document.getElementById("signup").style.display="none";
-  document.getElementById("dashboard").style.display="none";
-}
-
-function showLogin(){
-  document.getElementById("home").style.display="none";
-  document.getElementById("login").style.display="flex";
-  document.getElementById("signup").style.display="none";
-}
-
-function showSignup(){
-  document.getElementById("home").style.display="none";
-  document.getElementById("signup").style.display="flex";
-  document.getElementById("login").style.display="none";
-}
-
-function showDash(){
-  if(!localStorage.getItem("user")) return alert("Login first");
-
-  document.getElementById("home").style.display="none";
-  document.getElementById("login").style.display="none";
-  document.getElementById("signup").style.display="none";
-  document.getElementById("dashboard").style.display="block";
-
-  loadData();
-}
-
-/* AUTH */
-function signup(){
-  let users = JSON.parse(localStorage.getItem("users")) || [];
-
-  if(users.find(u=>u.email===signupEmail.value)){
-    alert("User already exists");
-    return;
-  }
-
-  users.push({email:signupEmail.value, pass:signupPass.value});
-  localStorage.setItem("users", JSON.stringify(users));
-
-  alert("Signup successful!");
-  showLogin();
-}
-
-function login(){
-  let users = JSON.parse(localStorage.getItem("users")) || [];
-
-  let user = users.find(u =>
-    u.email === loginEmail.value &&
-    u.pass === loginPass.value
-  );
-
-  if(user){
-    localStorage.setItem("user", user.email);
-    updateNav();
-    showDash();
+// ---------------- NAV CONTROL ----------------
+function updateNav() {
+  if (token) {
+    loginBtn.style.display = "none";
+    signupBtn.style.display = "none";
+    dashboardBtn.style.display = "inline-block";
+    logoutBtn.style.display = "inline-block";
   } else {
-    alert("Invalid login");
+    loginBtn.style.display = "inline-block";
+    signupBtn.style.display = "inline-block";
+    dashboardBtn.style.display = "none";
+    logoutBtn.style.display = "none";
   }
 }
 
-function logout(){
-  localStorage.removeItem("user");
+// ---------------- HOME ----------------
+function showHome() {
+  app.innerHTML = `
+    <h1>Donate & Save Lives 🌍</h1>
+    <p>Help provide food, shelter & hope.</p>
+    <button onclick="showLogin()">Get Started</button>
+  `;
+}
+
+// ---------------- LOGIN ----------------
+function showLogin() {
+  app.innerHTML = `
+    <h2>Login</h2>
+    <input id="email" placeholder="Email"><br>
+    <input id="password" type="password" placeholder="Password"><br>
+    <button onclick="login()">Login</button>
+  `;
+}
+
+async function login() {
+  const res = await fetch(`${API}/api/auth/login`, {
+    method: "POST",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify({
+      email: email.value,
+      password: password.value
+    })
+  });
+
+  const data = await res.json();
+
+  if (data.token) {
+    token = data.token;
+    localStorage.setItem("token", token);
+    alert("Login success");
+    updateNav();
+    showDashboard();
+  } else {
+    alert(data.message || "Login failed");
+  }
+}
+
+// ---------------- SIGNUP ----------------
+function showSignup() {
+  app.innerHTML = `
+    <h2>Signup</h2>
+    <input id="email" placeholder="Email"><br>
+    <input id="password" type="password" placeholder="Password"><br>
+    <button onclick="signup()">Signup</button>
+  `;
+}
+
+async function signup() {
+  const res = await fetch(`${API}/api/auth/signup`, {
+    method: "POST",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify({
+      email: email.value,
+      password: password.value
+    })
+  });
+
+  const data = await res.json();
+
+  if (data.message) {
+    alert("Signup success, please login");
+    showLogin();
+  } else {
+    alert("Signup failed");
+  }
+}
+
+// ---------------- DASHBOARD ----------------
+function showDashboard() {
+  if (!token) return showLogin();
+
+  app.innerHTML = `
+    <h2>Dashboard</h2>
+
+    <div class="card">
+      <h3>Donate</h3>
+      <input id="amount" placeholder="Amount">
+      <button onclick="donate()">Donate</button>
+    </div>
+
+    <div class="card">
+      <h3>Your Donations</h3>
+      <ul id="donations"></ul>
+    </div>
+  `;
+
+  loadDonations();
+}
+
+// ---------------- DONATE ----------------
+async function donate() {
+  await fetch(`${API}/api/donations`, {
+    method: "POST",
+    headers: {
+      "Content-Type":"application/json",
+      "Authorization": "Bearer " + token
+    },
+    body: JSON.stringify({ amount: amount.value })
+  });
+
+  loadDonations();
+}
+
+// ---------------- LOAD DONATIONS ----------------
+async function loadDonations() {
+  const res = await fetch(`${API}/api/donations`, {
+    headers: {
+      "Authorization": "Bearer " + token
+    }
+  });
+
+  const data = await res.json();
+
+  donations.innerHTML = "";
+  data.forEach(d => {
+    donations.innerHTML += `<li>₹${d.amount}</li>`;
+  });
+}
+
+// ---------------- LOGOUT ----------------
+function logout() {
+  localStorage.removeItem("token");
+  token = null;
   updateNav();
   showHome();
 }
 
-/* DONATIONS */
-function donate(){
-  let user = localStorage.getItem("user");
-  if(!user) return alert("Login required");
-
-  let amt = Number(document.getElementById("amount").value);
-  if(amt <= 0) return alert("Enter valid amount");
-
-  let data = JSON.parse(localStorage.getItem("donations")) || [];
-
-  data.push({user, amt});
-  localStorage.setItem("donations", JSON.stringify(data));
-
-  loadData();
-}
-
-function quickDonate(){
-  if(!localStorage.getItem("user")){
-    alert("Login first");
-    showLogin();
-    return;
-  }
-
-  document.getElementById("amount").value = document.getElementById("quickAmount").value;
-  donate();
-}
-
-/* LOAD USER DATA */
-function loadData(){
-  let user = localStorage.getItem("user");
-  let data = JSON.parse(localStorage.getItem("donations")) || [];
-
-  let userData = data.filter(d => d.user === user);
-
-  let total = userData.reduce((s,d)=>s+d.amt,0);
-  document.getElementById("total").innerText = "₹" + total;
-
-  let lives = Math.floor(total/500);
-  document.getElementById("lives").innerText = lives;
-
-  let badge = "🥉 Bronze";
-  if(total > 5000) badge="🥇 Gold";
-  else if(total > 2000) badge="🥈 Silver";
-
-  document.getElementById("badge").innerText = badge;
-
-  let history = document.getElementById("history");
-  history.innerHTML = "";
-
-  userData.reverse().forEach(d=>{
-    let div = document.createElement("div");
-    div.className = "history-item";
-    div.innerHTML = `<span>₹${d.amt}</span>`;
-    history.appendChild(div);
-  });
-}
-
-/* INITIAL LOAD */
+// INIT
 updateNav();
 showHome();
 
