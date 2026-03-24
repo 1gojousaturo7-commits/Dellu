@@ -8,98 +8,67 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 
 <style>
-body{
+body {
   margin:0;
   font-family:'Poppins';
-  background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+  background: linear-gradient(135deg,#0f2027,#203a43,#2c5364);
   color:white;
 }
 
-/* NAVBAR */
-.navbar{
+/* NAV */
+.nav {
   display:flex;
   justify-content:space-between;
-  padding:20px 40px;
-  background:rgba(0,0,0,0.5);
+  padding:15px 30px;
+  background:rgba(0,0,0,0.3);
 }
-
-.navbar button{
+.nav button {
   margin-left:10px;
-  padding:8px 15px;
-  border:none;
-  border-radius:8px;
-  background:#ff6b6b;
-  color:white;
-  cursor:pointer;
-}
-
-/* HERO */
-.hero{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:60px;
-}
-
-.hero-text h1{
-  font-size:50px;
-  color:#ffb347;
-}
-
-.hero-text p{
-  max-width:400px;
-  opacity:0.8;
-}
-
-.cta{
-  margin-top:20px;
-  padding:12px 20px;
-  background:#00c9a7;
-  border:none;
-  border-radius:10px;
-  color:white;
-  cursor:pointer;
-}
-
-/* DONATE CARD */
-.donate-card{
-  background:rgba(255,255,255,0.1);
-  padding:20px;
-  border-radius:15px;
-  width:300px;
-  backdrop-filter:blur(10px);
-}
-
-.donate-card input{
-  width:100%;
-  padding:10px;
-  margin:10px 0;
-  border:none;
-  border-radius:8px;
-}
-
-.donate-card button{
-  width:100%;
-  padding:10px;
-  background:#ff6b6b;
-  border:none;
-  border-radius:10px;
-  color:white;
 }
 
 /* SECTIONS */
-.section{display:none;}
-.active{display:block;}
+.section {display:none;}
+.active {display:block;}
 
-.glass{
+/* HERO */
+.hero {
+  padding:80px;
+  text-align:left;
+}
+.hero h1 {
+  font-size:48px;
+}
+.hero button {
+  margin-top:20px;
+}
+
+/* CARD */
+.glass {
   background:rgba(255,255,255,0.08);
   padding:20px;
   border-radius:15px;
   margin:20px;
 }
 
-/* DASHBOARD */
-.history-item{
+/* INPUT */
+input {
+  width:100%;
+  padding:10px;
+  margin:10px 0;
+}
+
+/* BUTTON */
+button {
+  padding:10px 15px;
+  border:none;
+  border-radius:8px;
+  background:#00c853;
+  color:white;
+  cursor:pointer;
+}
+
+/* HISTORY */
+.history-item {
   display:flex;
   justify-content:space-between;
   padding:10px;
@@ -110,102 +79,84 @@ body{
 
 <body>
 
-<!-- NAVBAR -->
-<div class="navbar">
-  <h2>❤️ NGO</h2>
+<!-- NAV -->
+<div class="nav">
+  <h2>🌿 NGO</h2>
   <div>
     <button onclick="show('home')">Home</button>
-    <button onclick="show('login')">Login</button>
-    <button onclick="show('signup')">Signup</button>
-    <button id="dashboardBtn" onclick="show('dashboard')" style="display:none;">Dashboard</button>
-    <button onclick="logout()">Logout</button>
+    <button onclick="show('login')" id="loginBtn">Login</button>
+    <button onclick="show('signup')" id="signupBtn">Signup</button>
+    <button onclick="show('dashboard')" id="dashBtn" style="display:none;">Dashboard</button>
+    <button onclick="logout()" id="logoutBtn" style="display:none;">Logout</button>
   </div>
 </div>
 
 <!-- HOME -->
 <div id="home" class="section active">
-<div class="hero">
-
-<div class="hero-text">
-<h1>Donate & Save Lives 🌍</h1>
-<p>Every contribution counts. Help us provide food, shelter, and hope to those who need it most.</p>
-<button class="cta" onclick="show('signup')">Get Started</button>
-</div>
-
-<div class="donate-card">
-<h3>Donate Now</h3>
-<input id="quickAmount" type="number" placeholder="Enter amount">
-<button onclick="quickDonate()">Donate</button>
-</div>
-
-</div>
+  <div class="hero">
+    <h1>Donate & Save Lives 🌍</h1>
+    <p>Your small help can change someone’s future</p>
+    <button onclick="show('signup')">Start Helping</button>
+  </div>
 </div>
 
 <!-- LOGIN -->
-<div id="login" class="section glass">
-<h2>Login</h2>
-<input id="loginEmail" placeholder="Email">
-<input id="loginPass" type="password" placeholder="Password">
-<button onclick="login()">Login</button>
+<div id="login" class="section">
+  <div class="glass">
+    <h2>Login</h2>
+    <input id="loginEmail" placeholder="Email">
+    <input id="loginPass" type="password" placeholder="Password">
+    <button onclick="login()">Login</button>
+  </div>
 </div>
 
 <!-- SIGNUP -->
-<div id="signup" class="section glass">
-<h2>Signup</h2>
-<input id="signupEmail" placeholder="Email">
-<input id="signupPass" type="password" placeholder="Password">
-<button onclick="signup()">Signup</button>
+<div id="signup" class="section">
+  <div class="glass">
+    <h2>Signup</h2>
+    <input id="signupEmail" placeholder="Email">
+    <input id="signupPass" type="password" placeholder="Password">
+    <button onclick="signup()">Signup</button>
+  </div>
 </div>
 
 <!-- DASHBOARD -->
 <div id="dashboard" class="section">
+  
+  <div class="glass">
+    <h2>Donate</h2>
+    <input id="donationAmount" type="number" placeholder="Enter amount">
+    <button onclick="donate()">Donate</button>
+  </div>
 
-<div class="glass">
-<h3>Donate</h3>
-<input id="amount" type="number" placeholder="Enter amount">
-<button onclick="donate()">Donate</button>
-</div>
-
-<div class="glass">
-<h3>Your Donations</h3>
-<div id="history"></div>
-</div>
+  <div class="glass">
+    <h2>Your Donations</h2>
+    <div id="userDonations"></div>
+  </div>
 
 </div>
 
 <script>
-const BASE_URL="https://ngo-backend-5zc1.onrender.com";
+const API = "https://ngo-backend-5zc1.onrender.com/api";
 
-/* NAVIGATION */
 function show(id){
-  if(id==="dashboard" && !localStorage.getItem("token")){
-    alert("Login first!");
-    show("login");
-    return;
-  }
-
   document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
   document.getElementById(id).classList.add("active");
-
-  update();
 }
 
-/* AUTH UI */
-function updateAuthUI(){
-  let token=localStorage.getItem("token");
-  let btn=document.getElementById("dashboardBtn");
+/* AUTH UI CONTROL */
+function updateUI(){
+  let token = localStorage.getItem("token");
 
-  if(token){
-    btn.style.display="inline-block";
-  } else {
-    btn.style.display="none";
-    show("home");
-  }
+  document.getElementById("loginBtn").style.display = token ? "none":"inline-block";
+  document.getElementById("signupBtn").style.display = token ? "none":"inline-block";
+  document.getElementById("dashBtn").style.display = token ? "inline-block":"none";
+  document.getElementById("logoutBtn").style.display = token ? "inline-block":"none";
 }
 
 /* SIGNUP */
 async function signup(){
-  await fetch(`${BASE_URL}/api/auth/signup`,{
+  let res = await fetch(API+"/auth/signup",{
     method:"POST",
     headers:{"Content-Type":"application/json"},
     body:JSON.stringify({
@@ -214,13 +165,15 @@ async function signup(){
     })
   });
 
-  alert("Account created!");
-  show("login");
+  let data = await res.json();
+  alert(data.message || "Signup done");
+
+  show("login"); // redirect to login
 }
 
 /* LOGIN */
 async function login(){
-  let res=await fetch(`${BASE_URL}/api/auth/login`,{
+  let res = await fetch(API+"/auth/login",{
     method:"POST",
     headers:{"Content-Type":"application/json"},
     body:JSON.stringify({
@@ -229,77 +182,75 @@ async function login(){
     })
   });
 
-  let data=await res.json();
+  let data = await res.json();
 
   if(data.token){
     localStorage.setItem("token",data.token);
-    updateAuthUI();
+    updateUI();
     show("dashboard");
-  } else alert("Login failed");
+    loadDonations();
+  } else {
+    alert("Login failed");
+  }
 }
 
 /* LOGOUT */
 function logout(){
   localStorage.removeItem("token");
-  updateAuthUI();
+  updateUI();
+  show("home");
 }
 
 /* DONATE */
 async function donate(){
-  let token=localStorage.getItem("token");
+  let token = localStorage.getItem("token");
 
   if(!token){
-    alert("Login first!");
+    alert("Login first");
     show("login");
     return;
   }
 
-  await fetch(`${BASE_URL}/api/donations`,{
+  let amount = Number(donationAmount.value);
+
+  await fetch(API+"/donations",{
     method:"POST",
     headers:{
       "Content-Type":"application/json",
-      "Authorization":token
+      "Authorization":"Bearer "+token
     },
-    body:JSON.stringify({
-      amount:Number(amount.value)
-    })
+    body:JSON.stringify({amount})
   });
 
   alert("Donation successful ❤️");
-  update();
+  loadDonations();
 }
 
-/* QUICK DONATE FROM HOME */
-function quickDonate(){
-  if(!localStorage.getItem("token")){
-    alert("Login first!");
-    show("login");
-    return;
-  }
+/* LOAD USER DONATIONS */
+async function loadDonations(){
+  let token = localStorage.getItem("token");
 
-  amount.value = quickAmount.value;
-  show("dashboard");
-}
+  let res = await fetch(API+"/donations/my",{
+    headers:{
+      "Authorization":"Bearer "+token
+    }
+  });
 
-/* UPDATE DATA */
-async function update(){
-  let res=await fetch(`${BASE_URL}/api/donations`);
-  let data=await res.json();
+  let data = await res.json();
 
-  if(!localStorage.getItem("token")) return;
+  let container = document.getElementById("userDonations");
+  container.innerHTML="";
 
-  history.innerHTML="";
   data.forEach(d=>{
     let div=document.createElement("div");
     div.className="history-item";
-    div.innerHTML=`₹${d.amount}`;
-    history.appendChild(div);
+    div.innerHTML=`<span>₹${d.amount}</span><span>${new Date(d.date).toLocaleDateString()}</span>`;
+    container.appendChild(div);
   });
 }
 
 /* INIT */
-update();
-updateAuthUI();
+updateUI();
 </script>
 
 </body>
