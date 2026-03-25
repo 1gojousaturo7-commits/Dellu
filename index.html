@@ -12,7 +12,6 @@ body {
   background: var(--bg);
   color: var(--text);
   transition: 0.3s;
-  perspective: 1000px;
 }
 
 :root {
@@ -35,13 +34,12 @@ header {
   padding:18px 50px;
   background:rgba(0,0,0,0.4);
   backdrop-filter: blur(10px);
-  box-shadow:0 5px 20px rgba(0,0,0,0.3);
 }
 
 .nav-right {
   display:flex;
-  align-items:center;
   gap:10px;
+  align-items:center;
 }
 
 .nav-right button {
@@ -51,12 +49,7 @@ header {
   font-weight:600;
   background:linear-gradient(45deg,#ff6b6b,#ff8e53);
   color:white;
-  transition:0.3s;
-}
-
-.nav-right button:hover {
-  transform:translateY(-3px) scale(1.05);
-  box-shadow:0 8px 20px rgba(255,107,107,0.4);
+  cursor:pointer;
 }
 
 #profile {
@@ -70,83 +63,56 @@ header {
 .container {padding:60px;text-align:center;}
 
 /* HERO */
-.hero {
-  margin-top:60px;
-}
-
 .hero h1 {
-  font-size:60px;
+  font-size:55px;
   background:linear-gradient(45deg,#ff6b6b,#ffd166);
   -webkit-background-clip:text;
   -webkit-text-fill-color:transparent;
 }
 
-.hero p {
-  margin-top:15px;
-  font-size:18px;
-  color:#ccc;
-}
+.hero p {margin-top:15px;color:#ccc;}
 
 .hero button {
-  margin-top:25px;
-  padding:14px 28px;
-  font-size:16px;
-  border-radius:30px;
-  background:linear-gradient(45deg,#ff6b6b,#ff8e53);
+  margin-top:20px;
+  padding:12px 25px;
+  border-radius:25px;
+  background:#ff6b6b;
+  border:none;
 }
 
 /* FEATURES */
 .features {
-  margin-top:80px;
+  margin-top:60px;
   display:flex;
   justify-content:center;
-  gap:30px;
+  gap:25px;
   flex-wrap:wrap;
 }
 
 .feature-card {
   background:var(--card);
-  padding:25px;
-  width:250px;
+  padding:20px;
   border-radius:15px;
-  transition:0.3s;
-}
-
-.feature-card:hover {
-  transform:translateY(-10px) scale(1.05);
+  width:230px;
 }
 
 /* DASH */
-.dash-container {
-  display:flex;
-  flex-wrap:wrap;
-  justify-content:center;
-  gap:20px;
-}
-
 .dash-card {
   background:var(--card);
-  padding:25px;
+  padding:20px;
   border-radius:15px;
   width:250px;
-}
-
-input {
-  padding:10px;
-  width:90%;
-  border-radius:8px;
-  border:none;
-  margin:5px;
+  margin:auto;
 }
 
 ul {list-style:none;}
-ul li {
+li {
   display:flex;
   justify-content:space-between;
   padding:10px;
   margin:8px 0;
-  border-radius:8px;
   background:rgba(255,255,255,0.05);
+  border-radius:8px;
 }
 
 /* CHAT */
@@ -166,7 +132,6 @@ ul li {
 }
 
 #chatbody {display:none;padding:10px;}
-#chatlog {height:150px;overflow:auto;font-size:13px;}
 </style>
 </head>
 
@@ -203,8 +168,6 @@ ul li {
 const API="https://ngo-backend-5zc1.onrender.com";
 let token=localStorage.getItem("token");
 
-function toggleTheme(){document.body.classList.toggle("light");}
-
 /* NAV */
 function updateNav(){
   let email = localStorage.getItem("email");
@@ -215,10 +178,9 @@ function updateNav(){
     dashboardBtn.style.display="inline";
     logoutBtn.style.display="inline";
 
-    let username = email ? email.split("@")[0] : "User";
+    let username = email.split("@")[0];
     profile.style.display="inline";
     profile.innerText="👤 " + username;
-
   } else {
     loginBtn.style.display="inline";
     signupBtn.style.display="inline";
@@ -234,24 +196,13 @@ function showHome(){
   <div class="hero">
     <h1>🌍 Empower NGOs</h1>
     <p>Track Donations • Ensure Transparency • Make Real Impact</p>
-    <button onclick="showLogin()">Get Started 🚀</button>
+    <button onclick="showLogin()">Get Started</button>
   </div>
 
   <div class="features">
-    <div class="feature-card">
-      <h3>💰 Donations</h3>
-      <p>Secure and transparent contribution tracking</p>
-    </div>
-
-    <div class="feature-card">
-      <h3>📊 Analytics</h3>
-      <p>Real-time insights on impact and funds</p>
-    </div>
-
-    <div class="feature-card">
-      <h3>🤝 Volunteers</h3>
-      <p>Manage and connect with volunteers easily</p>
-    </div>
+    <div class="feature-card">💰 Donations</div>
+    <div class="feature-card">📊 Analytics</div>
+    <div class="feature-card">🤝 Volunteers</div>
   </div>`;
 }
 
@@ -260,8 +211,8 @@ function showLogin(){
   app.innerHTML=`
   <div class="dash-card">
     <h2>Login</h2>
-    <input id="email"><br>
-    <input id="password" type="password"><br>
+    <input id="email"><br><br>
+    <input id="password" type="password"><br><br>
     <button onclick="login()">Login</button>
   </div>`;
 }
@@ -278,7 +229,7 @@ async function login(){
   if(data.token){
     token=data.token;
     localStorage.setItem("token",token);
-    localStorage.setItem("email", email.value);
+    localStorage.setItem("email",email.value);
     updateNav();
     showDashboard();
   }
@@ -289,8 +240,8 @@ function showSignup(){
   app.innerHTML=`
   <div class="dash-card">
     <h2>Signup</h2>
-    <input id="email"><br>
-    <input id="password" type="password"><br>
+    <input id="email"><br><br>
+    <input id="password" type="password"><br><br>
     <button onclick="signup()">Signup</button>
   </div>`;
 }
@@ -305,20 +256,18 @@ async function signup(){
   showLogin();
 }
 
-/* DASHBOARD (unchanged) */
+/* DASHBOARD */
 function showDashboard(){
   app.innerHTML=`
   <h1>📊 Dashboard</h1>
 
-  <div class="dash-container">
-    <div class="dash-card">
-      <h3>💰 Donate</h3>
-      <input id="amount" placeholder="Enter amount">
-      <button onclick="donate()">Donate</button>
-    </div>
+  <div class="dash-card">
+    <h3>💰 Donate</h3>
+    <input id="amount"><br><br>
+    <button onclick="donate()">Donate</button>
   </div>
 
-  <div style="max-width:600px;margin:40px auto;">
+  <div style="max-width:600px;margin:30px auto;">
     <div class="dash-card">
       <h3>📜 Donation History</h3>
       <ul id="donations"></ul>
@@ -329,7 +278,76 @@ function showDashboard(){
   loadDonations();
 }
 
-/* KEEP YOUR EXISTING LOGIC BELOW (unchanged) */
+/* DONATE */
+function donate(){
+  let amt=amount.value;
+  let email=localStorage.getItem("email");
+  let username=email.split("@")[0];
+
+  confirmPayment(username,amt);
+}
+
+async function confirmPayment(username,amount){
+  await fetch(API+"/api/donations",{
+    method:"POST",
+    headers:{
+      "Content-Type":"application/json",
+      "Authorization":"Bearer "+token
+    },
+    body:JSON.stringify({amount,username})
+  });
+
+  alert("Donation Successful");
+  showDashboard();
+}
+
+/* LOAD DONATIONS */
+async function loadDonations(){
+  const res=await fetch(API+"/api/donations",{
+    headers:{Authorization:"Bearer "+token}
+  });
+
+  const data=await res.json();
+
+  donations.innerHTML="";
+
+  data.reverse().forEach(d=>{
+    donations.innerHTML+=`
+    <li>
+      <span>${d.username}</span>
+      <span>₹${d.amount}</span>
+    </li>`;
+  });
+}
+
+/* LOGOUT */
+function logout(){
+  localStorage.clear();
+  token=null;
+  updateNav();
+  showHome();
+}
+
+/* CHAT */
+function toggleChat(){
+  chatbody.style.display=chatbody.style.display==="none"?"block":"none";
+}
+
+function sendMsg(){
+  let msg=chatInput.value;
+  chatlog.innerHTML+=`<div>🧑 ${msg}</div>`;
+
+  let reply="Ask about donations";
+
+  if(msg.includes("money")) reply="Funds go to NGO causes";
+  if(msg.includes("how")) reply="Login → Donate → Track";
+
+  chatlog.innerHTML+=`<div>🤖 ${reply}</div>`;
+}
+
+/* INIT */
+updateNav();
+showHome();
 </script>
 
 </body>
