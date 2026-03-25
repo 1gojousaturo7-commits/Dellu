@@ -12,6 +12,7 @@ body {
   background: var(--bg);
   color: var(--text);
   transition: 0.3s;
+  perspective: 1000px;
 }
 
 :root {
@@ -20,10 +21,10 @@ body {
   --card:rgba(255,255,255,0.08);
 }
 
-/* GREEN LIGHT MODE */
+/* ORANGE LIGHT MODE */
 .light {
-  --bg:#e8f5e9;
-  --text:#1b5e20;
+  --bg:#fff3e0;
+  --text:#5d4037;
   --card:#ffffff;
 }
 
@@ -33,6 +34,7 @@ header {
   justify-content:space-between;
   padding:15px 40px;
   background:rgba(0,0,0,0.3);
+  backdrop-filter:blur(10px);
 }
 
 button {
@@ -42,25 +44,62 @@ button {
   background:#ff6b6b;
   color:white;
   cursor:pointer;
+  transition:0.3s;
+  transform-style:preserve-3d;
 }
-button:hover {background:#ff3b3b;}
 
+button:hover {
+  transform: translateY(-3px) scale(1.05);
+  background:#ff3b3b;
+}
+
+/* CONTAINER */
 .container {padding:60px;text-align:center;}
 
 /* HERO */
 .hero h1 {font-size:50px;margin-bottom:10px;}
 .hero p {margin-bottom:20px;color:#ccc;}
 
-/* CENTER CARD */
+/* 3D CARD */
 .card {
   background:var(--card);
   padding:25px;
   margin:40px auto;
   border-radius:15px;
   width:300px;
+  transform-style: preserve-3d;
+  transition:0.4s;
 }
 
-/* NGO GRID */
+.card:hover {
+  transform: rotateX(5deg) rotateY(5deg) scale(1.03);
+}
+
+/* DASH CARDS */
+.dash-container {
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:20px;
+}
+
+.dash-card {
+  background:var(--card);
+  padding:25px;
+  border-radius:15px;
+  width:250px;
+  transition:0.4s;
+}
+
+.dash-card:hover {
+  transform: translateY(-8px) scale(1.05);
+}
+
+.highlight {
+  border:2px solid #ff6b6b;
+}
+
+/* NGO IMAGES */
 .ngo img {
   width:100%;
   border-radius:10px;
@@ -79,10 +118,12 @@ input {
 /* LIST */
 ul {list-style:none;}
 ul li {
-  background:rgba(255,255,255,0.05);
-  margin:8px 0;
+  display:flex;
+  justify-content:space-between;
   padding:10px;
+  margin:8px 0;
   border-radius:8px;
+  background:rgba(255,255,255,0.05);
 }
 
 /* CHAT */
@@ -136,10 +177,12 @@ ul li {
 const API="https://ngo-backend-5zc1.onrender.com";
 let token=localStorage.getItem("token");
 
+/* THEME */
 function toggleTheme(){
   document.body.classList.toggle("light");
 }
 
+/* NAV */
 function updateNav(){
   loginBtn.style.display=token?"none":"inline";
   signupBtn.style.display=token?"none":"inline";
@@ -225,25 +268,32 @@ async function signup(){
 /* DASHBOARD */
 function showDashboard(){
   app.innerHTML=`
-  <div class="card">
-    <h3>Donate</h3>
-    <input id="amount">
-    <button onclick="donate()">Donate</button>
+  <h1>📊 Dashboard</h1>
+
+  <div class="dash-container">
+    <div class="dash-card">
+      <h3>💰 Donate</h3>
+      <input id="amount">
+      <button onclick="donate()">Donate</button>
+    </div>
+
+    <div class="dash-card highlight">
+      <h3>Total Donations</h3>
+      <h1>₹<span id="total">0</span></h1>
+    </div>
   </div>
 
-  <div class="card">
-    <h3>Total</h3>
-    ₹<span id="total">0</span>
+  <div style="max-width:500px;margin:30px auto;">
+    <div class="dash-card">
+      <h3>📜 History</h3>
+      <ul id="donations"></ul>
+    </div>
   </div>
-
-  <div class="card">
-    <h3>History</h3>
-    <ul id="donations"></ul>
-  </div>`;
+  `;
   loadDonations();
 }
 
-/* PAYMENT UI */
+/* PAYMENT */
 function donate(){
   let amt=amount.value;
   app.innerHTML=`
@@ -275,7 +325,7 @@ async function loadDonations(){
   donations.innerHTML="";
   data.slice().reverse().forEach(d=>{
     total+=Number(d.amount);
-    donations.innerHTML+=`<li>₹${d.amount}</li>`;
+    donations.innerHTML+=`<li><span>Donation</span><span>₹${d.amount}</span></li>`;
   });
   totalEl=document.getElementById("total");
   if(totalEl) totalEl.innerText=total;
