@@ -99,8 +99,6 @@ button:hover {
   width:250px;
 }
 
-.highlight {border:2px solid #ff6b6b;}
-
 input {
   padding:10px;
   width:90%;
@@ -185,7 +183,6 @@ function updateNav(){
     dashboardBtn.style.display="inline";
     logoutBtn.style.display="inline";
 
-    // SHOW PROFILE
     let username = email ? email.split("@")[0] : "User";
     profile.style.display="inline";
     profile.innerText="👤 " + username;
@@ -271,11 +268,6 @@ function showDashboard(){
       <input id="amount">
       <button onclick="donate()">Donate</button>
     </div>
-
-    <div class="dash-card highlight">
-      <h3>Total Donations</h3>
-      <h1>₹<span id="total">0</span></h1>
-    </div>
   </div>
 
   <div style="max-width:500px;margin:30px auto;">
@@ -325,19 +317,15 @@ async function loadDonations(){
   });
 
   const data=await res.json();
-  let total=0;
   donations.innerHTML="";
 
   data.slice().reverse().forEach(d=>{
-    total+=Number(d.amount);
     donations.innerHTML+=`
     <li>
       <span>${d.username || "User"}</span>
       <span>₹${d.amount}</span>
     </li>`;
   });
-
-  document.getElementById("total").innerText=total;
 }
 
 /* LOGOUT */
