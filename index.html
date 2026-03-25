@@ -6,47 +6,113 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-body {
+* {
   margin: 0;
-  font-family: Arial;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+body {
   background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
   color: white;
 }
 
+/* NAVBAR */
 header {
   display: flex;
   justify-content: space-between;
-  padding: 20px;
+  align-items: center;
+  padding: 15px 40px;
+  background: rgba(0,0,0,0.3);
+  backdrop-filter: blur(10px);
+}
+
+h2 {
+  color: #ff6b6b;
 }
 
 button {
-  padding: 10px 15px;
+  padding: 10px 16px;
   border: none;
-  border-radius: 6px;
+  border-radius: 20px;
   cursor: pointer;
-}
-
-.btn {
   background: #ff6b6b;
   color: white;
+  transition: 0.3s;
+}
+
+button:hover {
+  background: #ff3b3b;
+  transform: scale(1.05);
+}
+
+#nav button {
   margin-left: 10px;
 }
 
+/* MAIN CONTAINER */
 .container {
-  padding: 40px;
+  padding: 60px 40px;
+  min-height: 80vh;
 }
 
+/* HERO */
+.hero {
+  text-align: center;
+  margin-top: 80px;
+}
+
+.hero h1 {
+  font-size: 50px;
+  margin-bottom: 15px;
+}
+
+.hero p {
+  color: #ccc;
+  margin-bottom: 25px;
+}
+
+/* CARDS */
 .card {
-  background: rgba(255,255,255,0.1);
-  padding: 20px;
+  background: rgba(255,255,255,0.08);
+  padding: 25px;
   margin-top: 20px;
-  border-radius: 10px;
+  border-radius: 15px;
+  backdrop-filter: blur(10px);
 }
 
+/* INPUT */
 input {
   padding: 10px;
   margin: 5px;
-  width: 200px;
+  width: 220px;
+  border-radius: 8px;
+  border: none;
+}
+
+/* LIST */
+ul {
+  list-style: none;
+  padding: 0;
+}
+
+ul li {
+  background: rgba(255,255,255,0.05);
+  margin: 8px 0;
+  padding: 10px;
+  border-radius: 8px;
+}
+
+/* IMPACT SECTION */
+.impact {
+  margin-top: 40px;
+  text-align: center;
+}
+
+.impact p {
+  margin: 5px;
+  color: #ddd;
 }
 </style>
 </head>
@@ -57,11 +123,11 @@ input {
   <h2>❤️ NGO Impact</h2>
 
   <div id="nav">
-    <button class="btn" onclick="showHome()">Home</button>
-    <button class="btn" id="loginBtn" onclick="showLogin()">Login</button>
-    <button class="btn" id="signupBtn" onclick="showSignup()">Signup</button>
-    <button class="btn" id="dashboardBtn" onclick="showDashboard()" style="display:none;">Dashboard</button>
-    <button class="btn" id="logoutBtn" onclick="logout()" style="display:none;">Logout</button>
+    <button onclick="showHome()">Home</button>
+    <button id="loginBtn" onclick="showLogin()">Login</button>
+    <button id="signupBtn" onclick="showSignup()">Signup</button>
+    <button id="dashboardBtn" onclick="showDashboard()" style="display:none;">Dashboard</button>
+    <button id="logoutBtn" onclick="logout()" style="display:none;">Logout</button>
   </div>
 </header>
 
@@ -71,14 +137,14 @@ input {
 const API = "https://ngo-backend-5zc1.onrender.com";
 let token = localStorage.getItem("token");
 
-// ELEMENTS
+// NAV ELEMENTS
 const loginBtn = document.getElementById("loginBtn");
 const signupBtn = document.getElementById("signupBtn");
 const dashboardBtn = document.getElementById("dashboardBtn");
 const logoutBtn = document.getElementById("logoutBtn");
 const app = document.getElementById("app");
 
-// NAV
+// NAV UPDATE
 function updateNav() {
   if (token) {
     loginBtn.style.display = "none";
@@ -96,19 +162,30 @@ function updateNav() {
 // HOME
 function showHome() {
   app.innerHTML = `
-    <h1>Donate & Save Lives 🌍</h1>
-    <p>Help provide food, shelter & hope.</p>
-    <button onclick="showLogin()">Get Started</button>
+    <div class="hero">
+      <h1>Donate & Save Lives 🌍</h1>
+      <p>Support NGOs, empower communities, and create real impact.</p>
+      <button onclick="showLogin()">Get Started</button>
+    </div>
+
+    <div class="impact">
+      <h2>Our Impact</h2>
+      <p>₹500 = Feeds 5 people 🍛</p>
+      <p>₹1000 = Educates a child 📚</p>
+      <p>₹2000 = Medical support 🏥</p>
+    </div>
   `;
 }
 
 // LOGIN
 function showLogin() {
   app.innerHTML = `
-    <h2>Login</h2>
-    <input id="email" placeholder="Email"><br>
-    <input id="password" type="password" placeholder="Password"><br>
-    <button onclick="login()">Login</button>
+    <div class="card">
+      <h2>Login</h2>
+      <input id="email" placeholder="Email"><br>
+      <input id="password" type="password" placeholder="Password"><br>
+      <button onclick="login()">Login</button>
+    </div>
   `;
 }
 
@@ -142,10 +219,12 @@ async function login() {
 // SIGNUP
 function showSignup() {
   app.innerHTML = `
-    <h2>Signup</h2>
-    <input id="email" placeholder="Email"><br>
-    <input id="password" type="password" placeholder="Password"><br>
-    <button onclick="signup()">Signup</button>
+    <div class="card">
+      <h2>Signup</h2>
+      <input id="email" placeholder="Email"><br>
+      <input id="password" type="password" placeholder="Password"><br>
+      <button onclick="signup()">Signup</button>
+    </div>
   `;
 }
 
@@ -258,7 +337,6 @@ function logout() {
 // INIT
 updateNav();
 showHome();
-
 </script>
 
 </body>
