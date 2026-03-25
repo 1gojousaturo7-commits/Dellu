@@ -76,7 +76,7 @@ button:hover {
   padding:25px;
   margin:40px auto;
   border-radius:15px;
-  width:300px;
+  width:320px;
   transition:0.4s;
 }
 
@@ -96,7 +96,7 @@ button:hover {
   background:var(--card);
   padding:25px;
   border-radius:15px;
-  width:250px;
+  width:260px;
 }
 
 input {
@@ -111,9 +111,9 @@ ul {list-style:none;}
 ul li {
   display:flex;
   justify-content:space-between;
-  padding:10px;
-  margin:8px 0;
-  border-radius:8px;
+  padding:12px;
+  margin:10px 0;
+  border-radius:10px;
   background:rgba(255,255,255,0.05);
 }
 
@@ -211,8 +211,8 @@ function showLogin(){
   app.innerHTML=`
   <div class="card">
     <h2>Login</h2>
-    <input id="email"><br>
-    <input id="password" type="password"><br>
+    <input id="email" placeholder="Email"><br>
+    <input id="password" type="password" placeholder="Password"><br>
     <button onclick="login()">Login</button>
   </div>`;
 }
@@ -241,8 +241,8 @@ function showSignup(){
   app.innerHTML=`
   <div class="card">
     <h2>Signup</h2>
-    <input id="email"><br>
-    <input id="password" type="password"><br>
+    <input id="email" placeholder="Email"><br>
+    <input id="password" type="password" placeholder="Password"><br>
     <button onclick="signup()">Signup</button>
   </div>`;
 }
@@ -265,15 +265,15 @@ function showDashboard(){
   <div class="dash-container">
     <div class="dash-card">
       <h3>💰 Donate</h3>
-      <input id="amount">
+      <input id="amount" placeholder="Enter amount">
       <button onclick="donate()">Donate</button>
     </div>
   </div>
 
-  <div style="max-width:500px;margin:30px auto;">
-    <div class="dash-card">
-      <h3>📜 History</h3>
-      <ul id="donations"></ul>
+  <div style="max-width:700px;margin:40px auto;">
+    <div class="dash-card" style="width:100%;padding:30px;">
+      <h3 style="font-size:22px;">📜 Donation History</h3>
+      <ul id="donations" style="margin-top:20px;"></ul>
     </div>
   </div>
   `;
@@ -310,7 +310,7 @@ async function confirmPayment(username,amount){
   showDashboard();
 }
 
-/* LOAD */
+/* LOAD DONATIONS */
 async function loadDonations(){
   const res=await fetch(API+"/api/donations",{
     headers:{Authorization:"Bearer "+token}
@@ -320,10 +320,17 @@ async function loadDonations(){
   donations.innerHTML="";
 
   data.slice().reverse().forEach(d=>{
+
+    let username = d.username 
+      ? d.username 
+      : (d.email ? d.email.split("@")[0] : "Anonymous");
+
+    let amount = d.amount ? d.amount : 0;
+
     donations.innerHTML+=`
     <li>
-      <span>${d.username || "User"}</span>
-      <span>₹${d.amount}</span>
+      <span>👤 ${username}</span>
+      <span>₹${amount}</span>
     </li>`;
   });
 }
