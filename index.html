@@ -22,10 +22,8 @@ body {
 header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
   padding: 15px 40px;
   background: rgba(0,0,0,0.3);
-  backdrop-filter: blur(10px);
 }
 
 h2 {
@@ -36,59 +34,52 @@ button {
   padding: 10px 16px;
   border: none;
   border-radius: 20px;
-  cursor: pointer;
   background: #ff6b6b;
   color: white;
-  transition: 0.3s;
+  cursor: pointer;
+  margin-left: 10px;
 }
 
 button:hover {
   background: #ff3b3b;
-  transform: scale(1.05);
 }
 
-#nav button {
-  margin-left: 10px;
-}
-
-/* MAIN CONTAINER */
+/* CONTAINER */
 .container {
-  padding: 60px 40px;
-  min-height: 80vh;
+  padding: 60px;
 }
 
 /* HERO */
 .hero {
   text-align: center;
-  margin-top: 80px;
+  margin-top: 60px;
 }
 
 .hero h1 {
-  font-size: 50px;
+  font-size: 48px;
   margin-bottom: 15px;
 }
 
 .hero p {
   color: #ccc;
-  margin-bottom: 25px;
+  margin-bottom: 20px;
 }
 
-/* CARDS */
+/* CARD */
 .card {
   background: rgba(255,255,255,0.08);
   padding: 25px;
   margin-top: 20px;
   border-radius: 15px;
-  backdrop-filter: blur(10px);
 }
 
 /* INPUT */
 input {
   padding: 10px;
-  margin: 5px;
   width: 220px;
   border-radius: 8px;
   border: none;
+  margin: 5px;
 }
 
 /* LIST */
@@ -104,15 +95,10 @@ ul li {
   border-radius: 8px;
 }
 
-/* IMPACT SECTION */
+/* IMPACT */
 .impact {
-  margin-top: 40px;
   text-align: center;
-}
-
-.impact p {
-  margin: 5px;
-  color: #ddd;
+  margin-top: 40px;
 }
 </style>
 </head>
@@ -121,8 +107,7 @@ ul li {
 
 <header>
   <h2>❤️ NGO Impact</h2>
-
-  <div id="nav">
+  <div>
     <button onclick="showHome()">Home</button>
     <button id="loginBtn" onclick="showLogin()">Login</button>
     <button id="signupBtn" onclick="showSignup()">Signup</button>
@@ -164,15 +149,15 @@ function showHome() {
   app.innerHTML = `
     <div class="hero">
       <h1>Donate & Save Lives 🌍</h1>
-      <p>Support NGOs, empower communities, and create real impact.</p>
+      <p>Support NGOs and create real impact.</p>
       <button onclick="showLogin()">Get Started</button>
     </div>
 
     <div class="impact">
       <h2>Our Impact</h2>
-      <p>₹500 = Feeds 5 people 🍛</p>
-      <p>₹1000 = Educates a child 📚</p>
-      <p>₹2000 = Medical support 🏥</p>
+      <p>₹500 = Feeds 5 people</p>
+      <p>₹1000 = Educates a child</p>
+      <p>₹2000 = Medical support</p>
     </div>
   `;
 }
@@ -209,7 +194,7 @@ async function login() {
       updateNav();
       showDashboard();
     } else {
-      alert(data.message || "Login failed");
+      alert("Login failed");
     }
   } catch {
     alert("Server error");
@@ -230,7 +215,7 @@ function showSignup() {
 
 async function signup() {
   try {
-    const res = await fetch(`${API}/api/auth/signup`, {
+    await fetch(`${API}/api/auth/signup`, {
       method: "POST",
       headers: {"Content-Type":"application/json"},
       body: JSON.stringify({
@@ -239,14 +224,8 @@ async function signup() {
       })
     });
 
-    const data = await res.json();
-
-    if (data.message) {
-      alert("Signup successful ✅ Please login");
-      showLogin();
-    } else {
-      alert("Signup failed");
-    }
+    alert("Signup successful ✅");
+    showLogin();
   } catch {
     alert("Server error");
   }
@@ -294,7 +273,7 @@ async function donate() {
   }
 }
 
-// LOAD DONATIONS
+// LOAD DONATIONS (LATEST FIRST)
 async function loadDonations() {
   try {
     const res = await fetch(`${API}/api/donations`, {
@@ -317,8 +296,8 @@ async function loadDonations() {
     }
 
     list.innerHTML = "";
-    data.forEach(d => {
-      list.innerHTML += `<li>₹${d.amount}</li>`;
+    data.slice().reverse().forEach(d => {
+      list.innerHTML += `<li>💸 ₹${d.amount}</li>`;
     });
 
   } catch {
