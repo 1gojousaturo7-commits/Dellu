@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>NGO Impact</title>
+<title>Crazy Coders</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
@@ -34,7 +34,19 @@ header {
   justify-content:space-between;
   padding:15px 40px;
   background:rgba(0,0,0,0.3);
-  backdrop-filter:blur(10px);
+}
+
+.nav-right {
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+#profile {
+  display:none;
+  padding:8px 12px;
+  background:rgba(255,255,255,0.1);
+  border-radius:20px;
 }
 
 button {
@@ -44,8 +56,6 @@ button {
   background:#ff6b6b;
   color:white;
   cursor:pointer;
-  transition:0.3s;
-  transform-style:preserve-3d;
 }
 
 button:hover {
@@ -60,14 +70,13 @@ button:hover {
 .hero h1 {font-size:50px;margin-bottom:10px;}
 .hero p {margin-bottom:20px;color:#ccc;}
 
-/* 3D CARD */
+/* CARD */
 .card {
   background:var(--card);
   padding:25px;
   margin:40px auto;
   border-radius:15px;
   width:300px;
-  transform-style: preserve-3d;
   transition:0.4s;
 }
 
@@ -75,7 +84,7 @@ button:hover {
   transform: rotateX(5deg) rotateY(5deg) scale(1.03);
 }
 
-/* DASH CARDS */
+/* DASH */
 .dash-container {
   display:flex;
   flex-wrap:wrap;
@@ -88,25 +97,10 @@ button:hover {
   padding:25px;
   border-radius:15px;
   width:250px;
-  transition:0.4s;
 }
 
-.dash-card:hover {
-  transform: translateY(-8px) scale(1.05);
-}
+.highlight {border:2px solid #ff6b6b;}
 
-.highlight {
-  border:2px solid #ff6b6b;
-}
-
-/* NGO IMAGES */
-.ngo img {
-  width:100%;
-  border-radius:10px;
-  margin-top:10px;
-}
-
-/* INPUT */
 input {
   padding:10px;
   width:90%;
@@ -115,7 +109,6 @@ input {
   margin:5px;
 }
 
-/* LIST */
 ul {list-style:none;}
 ul li {
   display:flex;
@@ -150,8 +143,11 @@ ul li {
 <body>
 
 <header>
-  <h2>❤️ NGO Impact</h2>
-  <div>
+  <h2>🚀 Crazy Coders</h2>
+
+  <div class="nav-right">
+    <span id="profile"></span>
+
     <button onclick="showHome()">Home</button>
     <button id="loginBtn" onclick="showLogin()">Login</button>
     <button id="signupBtn" onclick="showSignup()">Signup</button>
@@ -177,44 +173,39 @@ ul li {
 const API="https://ngo-backend-5zc1.onrender.com";
 let token=localStorage.getItem("token");
 
-/* THEME */
-function toggleTheme(){
-  document.body.classList.toggle("light");
-}
+function toggleTheme(){document.body.classList.toggle("light");}
 
 /* NAV */
 function updateNav(){
-  loginBtn.style.display=token?"none":"inline";
-  signupBtn.style.display=token?"none":"inline";
-  dashboardBtn.style.display=token?"inline":"none";
-  logoutBtn.style.display=token?"inline":"none";
+  let email = localStorage.getItem("email");
+
+  if(token){
+    loginBtn.style.display="none";
+    signupBtn.style.display="none";
+    dashboardBtn.style.display="inline";
+    logoutBtn.style.display="inline";
+
+    // SHOW PROFILE
+    let username = email ? email.split("@")[0] : "User";
+    profile.style.display="inline";
+    profile.innerText="👤 " + username;
+
+  } else {
+    loginBtn.style.display="inline";
+    signupBtn.style.display="inline";
+    dashboardBtn.style.display="none";
+    logoutBtn.style.display="none";
+    profile.style.display="none";
+  }
 }
 
 /* HOME */
 function showHome(){
   app.innerHTML=`
   <div class="hero">
-    <h1>Donate & Save Lives 🌍</h1>
-    <p>Transparency. Trust. Impact.</p>
+    <h1>Crazy Coders 🌍</h1>
+    <p>Innovating for NGOs • Transparency • Impact</p>
     <button onclick="showLogin()">Get Started</button>
-  </div>
-
-  <div class="card">
-    <h3>Impact</h3>
-    <p>₹500 = Feeds 5 people</p>
-    <p>₹1000 = Educates a child</p>
-  </div>
-
-  <div class="card ngo">
-    <h3>Explore NGOs</h3>
-    <img src="https://images.unsplash.com/photo-1469571486292-b53601020a05">
-    <p>🍛 Food NGO</p>
-
-    <img src="https://images.unsplash.com/photo-1509062522246-3755977927d7">
-    <p>📚 Education NGO</p>
-
-    <img src="https://images.unsplash.com/photo-1584515933487-779824d29309">
-    <p>🏥 Health NGO</p>
   </div>`;
 }
 
@@ -235,10 +226,14 @@ async function login(){
     headers:{"Content-Type":"application/json"},
     body:JSON.stringify({email:email.value,password:password.value})
   });
+
   const data=await res.json();
+
   if(data.token){
     token=data.token;
     localStorage.setItem("token",token);
+    localStorage.setItem("email", email.value);
+
     updateNav();
     showDashboard();
   }
@@ -290,50 +285,65 @@ function showDashboard(){
     </div>
   </div>
   `;
+
   loadDonations();
 }
 
 /* PAYMENT */
 function donate(){
   let amt=amount.value;
+  let email = localStorage.getItem("email") || "user";
+  let username = email.split("@")[0];
+
   app.innerHTML=`
   <div class="card">
     <h2>💳 Payment</h2>
+    <p>Name: ${username}</p>
     <p>Amount: ₹${amt}</p>
-    <button onclick="confirmPayment(${amt})">Pay Now</button>
+    <button onclick="confirmPayment('${username}',${amt})">Pay Now</button>
   </div>`;
 }
 
-async function confirmPayment(amount){
+async function confirmPayment(username,amount){
   await fetch(API+"/api/donations",{
     method:"POST",
     headers:{
       "Content-Type":"application/json",
       "Authorization":"Bearer "+token
     },
-    body:JSON.stringify({amount})
+    body:JSON.stringify({amount, username})
   });
+
   alert("Payment Successful");
   showDashboard();
 }
 
 /* LOAD */
 async function loadDonations(){
-  const res=await fetch(API+"/api/donations",{headers:{Authorization:"Bearer "+token}});
+  const res=await fetch(API+"/api/donations",{
+    headers:{Authorization:"Bearer "+token}
+  });
+
   const data=await res.json();
   let total=0;
   donations.innerHTML="";
+
   data.slice().reverse().forEach(d=>{
     total+=Number(d.amount);
-    donations.innerHTML+=`<li><span>Donation</span><span>₹${d.amount}</span></li>`;
+    donations.innerHTML+=`
+    <li>
+      <span>${d.username || "User"}</span>
+      <span>₹${d.amount}</span>
+    </li>`;
   });
-  totalEl=document.getElementById("total");
-  if(totalEl) totalEl.innerText=total;
+
+  document.getElementById("total").innerText=total;
 }
 
 /* LOGOUT */
 function logout(){
   localStorage.removeItem("token");
+  localStorage.removeItem("email");
   token=null;
   updateNav();
   showHome();
