@@ -9,23 +9,8 @@
 * {margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif;}
 
 body {
-  background: var(--bg);
-  color: var(--text);
-  transition: 0.3s;
-  perspective: 1000px;
-}
-
-:root {
-  --bg:#0f2027;
-  --text:white;
-  --card:rgba(255,255,255,0.08);
-}
-
-/* ORANGE LIGHT MODE */
-.light {
-  --bg:#fff3e0;
-  --text:#5d4037;
-  --card:#ffffff;
+  background:#0f2027;
+  color:white;
 }
 
 /* NAV */
@@ -38,15 +23,8 @@ header {
 
 .nav-right {
   display:flex;
-  align-items:center;
   gap:10px;
-}
-
-#profile {
-  display:none;
-  padding:8px 12px;
-  background:rgba(255,255,255,0.1);
-  border-radius:20px;
+  align-items:center;
 }
 
 button {
@@ -58,57 +36,35 @@ button {
   cursor:pointer;
 }
 
-button:hover {
-  transform: translateY(-3px) scale(1.05);
-  background:#ff3b3b;
-}
-
 /* CONTAINER */
 .container {padding:60px;text-align:center;}
 
-/* HERO */
-.hero h1 {font-size:50px;margin-bottom:10px;}
-.hero p {margin-bottom:20px;color:#ccc;}
-
 /* CARD */
 .card {
-  background:var(--card);
+  background:rgba(255,255,255,0.08);
   padding:25px;
-  margin:40px auto;
+  margin:20px auto;
   border-radius:15px;
-  width:320px;
-  transition:0.4s;
-}
-
-.card:hover {
-  transform: rotateX(5deg) rotateY(5deg) scale(1.03);
+  width:300px;
 }
 
 /* DASH */
 .dash-container {
   display:flex;
-  flex-wrap:wrap;
-  justify-content:center;
-  gap:20px;
+  flex-direction:column;
+  align-items:center;
+  gap:30px;
 }
 
-.dash-card {
-  background:var(--card);
-  padding:25px;
+/* HISTORY */
+.history {
+  width:600px;
+  background:rgba(255,255,255,0.08);
+  padding:20px;
   border-radius:15px;
-  width:260px;
 }
 
-input {
-  padding:10px;
-  width:90%;
-  border-radius:8px;
-  border:none;
-  margin:5px;
-}
-
-ul {list-style:none;}
-ul li {
+.history-item {
   display:flex;
   justify-content:space-between;
   padding:12px;
@@ -116,25 +72,6 @@ ul li {
   border-radius:10px;
   background:rgba(255,255,255,0.05);
 }
-
-/* CHAT */
-#chatbox {
-  position:fixed;
-  bottom:20px;
-  right:20px;
-  width:260px;
-  background:var(--card);
-  border-radius:12px;
-}
-
-#chatheader {
-  background:#ff6b6b;
-  padding:10px;
-  cursor:pointer;
-}
-
-#chatbody {display:none;padding:10px;}
-#chatlog {height:150px;overflow:auto;font-size:13px;}
 </style>
 </head>
 
@@ -145,33 +82,19 @@ ul li {
 
   <div class="nav-right">
     <span id="profile"></span>
-
     <button onclick="showHome()">Home</button>
     <button id="loginBtn" onclick="showLogin()">Login</button>
     <button id="signupBtn" onclick="showSignup()">Signup</button>
     <button id="dashboardBtn" onclick="showDashboard()" style="display:none;">Dashboard</button>
     <button id="logoutBtn" onclick="logout()" style="display:none;">Logout</button>
-    <button onclick="toggleTheme()">🌗</button>
   </div>
 </header>
 
 <div class="container" id="app"></div>
 
-<!-- CHAT -->
-<div id="chatbox">
-  <div id="chatheader" onclick="toggleChat()">💬 Help</div>
-  <div id="chatbody">
-    <div id="chatlog"></div>
-    <input id="chatInput">
-    <button onclick="sendMsg()">Send</button>
-  </div>
-</div>
-
 <script>
 const API="https://ngo-backend-5zc1.onrender.com";
 let token=localStorage.getItem("token");
-
-function toggleTheme(){document.body.classList.toggle("light");}
 
 /* NAV */
 function updateNav(){
@@ -184,26 +107,22 @@ function updateNav(){
     logoutBtn.style.display="inline";
 
     let username = email ? email.split("@")[0] : "User";
-    profile.style.display="inline";
     profile.innerText="👤 " + username;
-
   } else {
     loginBtn.style.display="inline";
     signupBtn.style.display="inline";
     dashboardBtn.style.display="none";
     logoutBtn.style.display="none";
-    profile.style.display="none";
+    profile.innerText="";
   }
 }
 
 /* HOME */
 function showHome(){
   app.innerHTML=`
-  <div class="hero">
-    <h1>Crazy Coders 🌍</h1>
-    <p>Innovating for NGOs • Transparency • Impact</p>
-    <button onclick="showLogin()">Get Started</button>
-  </div>`;
+  <h1>Crazy Coders 🌍</h1>
+  <p>NGO Donation Platform</p>
+  <button onclick="showLogin()">Get Started</button>`;
 }
 
 /* LOGIN */
@@ -211,8 +130,8 @@ function showLogin(){
   app.innerHTML=`
   <div class="card">
     <h2>Login</h2>
-    <input id="email" placeholder="Email"><br>
-    <input id="password" type="password" placeholder="Password"><br>
+    <input id="email"><br><br>
+    <input id="password" type="password"><br><br>
     <button onclick="login()">Login</button>
   </div>`;
 }
@@ -229,7 +148,7 @@ async function login(){
   if(data.token){
     token=data.token;
     localStorage.setItem("token",token);
-    localStorage.setItem("email", email.value);
+    localStorage.setItem("email",email.value);
 
     updateNav();
     showDashboard();
@@ -241,8 +160,8 @@ function showSignup(){
   app.innerHTML=`
   <div class="card">
     <h2>Signup</h2>
-    <input id="email" placeholder="Email"><br>
-    <input id="password" type="password" placeholder="Password"><br>
+    <input id="email"><br><br>
+    <input id="password" type="password"><br><br>
     <button onclick="signup()">Signup</button>
   </div>`;
 }
@@ -253,6 +172,7 @@ async function signup(){
     headers:{"Content-Type":"application/json"},
     body:JSON.stringify({email:email.value,password:password.value})
   });
+
   alert("Signup done");
   showLogin();
 }
@@ -263,40 +183,34 @@ function showDashboard(){
   <h1>📊 Dashboard</h1>
 
   <div class="dash-container">
-    <div class="dash-card">
+
+    <div class="card">
       <h3>💰 Donate</h3>
-      <input id="amount" placeholder="Enter amount">
+      <input id="amount" placeholder="Enter amount"><br><br>
       <button onclick="donate()">Donate</button>
     </div>
-  </div>
 
-  <div style="max-width:700px;margin:40px auto;">
-    <div class="dash-card" style="width:100%;padding:30px;">
-      <h3 style="font-size:22px;">📜 Donation History</h3>
-      <ul id="donations" style="margin-top:20px;"></ul>
+    <div class="history">
+      <h3>📜 Donation History</h3>
+      <div id="donations"></div>
     </div>
+
   </div>
   `;
 
   loadDonations();
 }
 
-/* PAYMENT */
+/* DONATE */
 function donate(){
   let amt=amount.value;
-  let email = localStorage.getItem("email") || "user";
+  let email = localStorage.getItem("email");
   let username = email.split("@")[0];
 
-  app.innerHTML=`
-  <div class="card">
-    <h2>💳 Payment</h2>
-    <p>Name: ${username}</p>
-    <p>Amount: ₹${amt}</p>
-    <button onclick="confirmPayment('${username}',${amt})">Pay Now</button>
-  </div>`;
+  confirmPayment(username, amt);
 }
 
-async function confirmPayment(username,amount){
+async function confirmPayment(username, amount){
   await fetch(API+"/api/donations",{
     method:"POST",
     headers:{
@@ -306,32 +220,26 @@ async function confirmPayment(username,amount){
     body:JSON.stringify({amount, username})
   });
 
-  alert("Payment Successful");
+  alert("Donation Successful");
   showDashboard();
 }
 
-/* LOAD DONATIONS */
+/* LOAD DONATIONS (🔥 FIXED) */
 async function loadDonations(){
   const res=await fetch(API+"/api/donations",{
     headers:{Authorization:"Bearer "+token}
   });
 
   const data=await res.json();
+
   donations.innerHTML="";
 
-  data.slice().reverse().forEach(d=>{
-
-    let username = d.username 
-      ? d.username 
-      : (d.email ? d.email.split("@")[0] : "Anonymous");
-
-    let amount = d.amount ? d.amount : 0;
-
-    donations.innerHTML+=`
-    <li>
-      <span>👤 ${username}</span>
-      <span>₹${amount}</span>
-    </li>`;
+  data.forEach(d => {
+    donations.innerHTML += `
+    <div class="history-item">
+      <span>👤 ${d.username || "Unknown"}</span>
+      <span>₹${d.amount}</span>
+    </div>`;
   });
 }
 
@@ -342,25 +250,6 @@ function logout(){
   token=null;
   updateNav();
   showHome();
-}
-
-/* CHAT */
-function toggleChat(){
-  chatbody.style.display=chatbody.style.display==="none"?"block":"none";
-}
-
-function sendMsg(){
-  let msg=chatInput.value.toLowerCase();
-  chatlog.innerHTML+=`<div>🧑 ${msg}</div>`;
-
-  let reply="Ask about donations or NGOs";
-
-  if(msg.includes("donation")) reply="Donate from dashboard and track history";
-  else if(msg.includes("money")) reply="Funds go to food, education and health";
-  else if(msg.includes("how")) reply="Signup → Login → Donate";
-
-  chatlog.innerHTML+=`<div>🤖 ${reply}</div>`;
-  chatInput.value="";
 }
 
 /* INIT */
