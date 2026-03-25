@@ -13,21 +13,31 @@
   font-family: 'Segoe UI', sans-serif;
 }
 
+/* THEME */
 body {
-  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
-  color: white;
+  background: var(--bg);
+  color: var(--text);
+  transition: 0.3s;
 }
 
-/* NAVBAR */
+:root {
+  --bg: #0f2027;
+  --text: white;
+  --card: rgba(255,255,255,0.08);
+}
+
+.light {
+  --bg: #f5f5f5;
+  --text: #111;
+  --card: #ffffff;
+}
+
+/* NAV */
 header {
   display: flex;
   justify-content: space-between;
   padding: 15px 40px;
   background: rgba(0,0,0,0.3);
-}
-
-h2 {
-  color: #ff6b6b;
 }
 
 button {
@@ -57,17 +67,11 @@ button:hover {
 
 .hero h1 {
   font-size: 48px;
-  margin-bottom: 15px;
-}
-
-.hero p {
-  color: #ccc;
-  margin-bottom: 20px;
 }
 
 /* CARD */
 .card {
-  background: rgba(255,255,255,0.08);
+  background: var(--card);
   padding: 25px;
   margin-top: 20px;
   border-radius: 15px;
@@ -85,7 +89,6 @@ input {
 /* LIST */
 ul {
   list-style: none;
-  padding: 0;
 }
 
 ul li {
@@ -95,10 +98,43 @@ ul li {
   border-radius: 8px;
 }
 
-/* IMPACT */
-.impact {
-  text-align: center;
-  margin-top: 40px;
+/* CHATBOX */
+#chatbox {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 260px;
+  background: var(--card);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+#chatheader {
+  background: #ff6b6b;
+  padding: 10px;
+  cursor: pointer;
+}
+
+#chatbody {
+  display: none;
+  padding: 10px;
+}
+
+#chatlog {
+  height: 150px;
+  overflow-y: auto;
+  font-size: 13px;
+  margin-bottom: 5px;
+}
+
+.msg-user {
+  text-align: right;
+  margin: 5px;
+}
+
+.msg-bot {
+  text-align: left;
+  margin: 5px;
 }
 </style>
 </head>
@@ -113,23 +149,38 @@ ul li {
     <button id="signupBtn" onclick="showSignup()">Signup</button>
     <button id="dashboardBtn" onclick="showDashboard()" style="display:none;">Dashboard</button>
     <button id="logoutBtn" onclick="logout()" style="display:none;">Logout</button>
+    <button onclick="toggleTheme()">🌗</button>
   </div>
 </header>
 
 <div class="container" id="app"></div>
 
+<!-- CHATBOX -->
+<div id="chatbox">
+  <div id="chatheader" onclick="toggleChat()">💬 Assistant</div>
+  <div id="chatbody">
+    <div id="chatlog"></div>
+    <input id="chatInput" placeholder="Ask something...">
+    <button onclick="sendMsg()">Send</button>
+  </div>
+</div>
+
 <script>
 const API = "https://ngo-backend-5zc1.onrender.com";
 let token = localStorage.getItem("token");
 
-// NAV ELEMENTS
 const loginBtn = document.getElementById("loginBtn");
 const signupBtn = document.getElementById("signupBtn");
 const dashboardBtn = document.getElementById("dashboardBtn");
 const logoutBtn = document.getElementById("logoutBtn");
 const app = document.getElementById("app");
 
-// NAV UPDATE
+// THEME
+function toggleTheme(){
+  document.body.classList.toggle("light");
+}
+
+// NAV
 function updateNav() {
   if (token) {
     loginBtn.style.display = "none";
@@ -149,12 +200,12 @@ function showHome() {
   app.innerHTML = `
     <div class="hero">
       <h1>Donate & Save Lives 🌍</h1>
-      <p>Support NGOs and create real impact.</p>
+      <p>Support NGOs and create real impact</p>
       <button onclick="showLogin()">Get Started</button>
     </div>
 
-    <div class="impact">
-      <h2>Our Impact</h2>
+    <div class="card">
+      <h3>Impact</h3>
       <p>₹500 = Feeds 5 people</p>
       <p>₹1000 = Educates a child</p>
       <p>₹2000 = Medical support</p>
@@ -175,30 +226,23 @@ function showLogin() {
 }
 
 async function login() {
-  try {
-    const res = await fetch(`${API}/api/auth/login`, {
-      method: "POST",
-      headers: {"Content-Type":"application/json"},
-      body: JSON.stringify({
-        email: document.getElementById("email").value,
-        password: document.getElementById("password").value
-      })
-    });
+  const res = await fetch(`${API}/api/auth/login`, {
+    method: "POST",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify({
+      email: document.getElementById("email").value,
+      password: document.getElementById("password").value
+    })
+  });
 
-    const data = await res.json();
+  const data = await res.json();
 
-    if (data.token) {
-      token = data.token;
-      localStorage.setItem("token", token);
-      alert("Login success 🚀");
-      updateNav();
-      showDashboard();
-    } else {
-      alert("Login failed");
-    }
-  } catch {
-    alert("Server error");
-  }
+  if (data.token) {
+    token = data.token;
+    localStorage.setItem("token", token);
+    updateNav();
+    showDashboard();
+  } else alert("Login failed");
 }
 
 // SIGNUP
@@ -214,21 +258,17 @@ function showSignup() {
 }
 
 async function signup() {
-  try {
-    await fetch(`${API}/api/auth/signup`, {
-      method: "POST",
-      headers: {"Content-Type":"application/json"},
-      body: JSON.stringify({
-        email: document.getElementById("email").value,
-        password: document.getElementById("password").value
-      })
-    });
+  await fetch(`${API}/api/auth/signup`, {
+    method: "POST",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify({
+      email: document.getElementById("email").value,
+      password: document.getElementById("password").value
+    })
+  });
 
-    alert("Signup successful ✅");
-    showLogin();
-  } catch {
-    alert("Server error");
-  }
+  alert("Signup successful");
+  showLogin();
 }
 
 // DASHBOARD
@@ -239,13 +279,18 @@ function showDashboard() {
     <h2>Dashboard</h2>
 
     <div class="card">
-      <h3>Donate</h3>
-      <input id="amount" placeholder="Amount">
+      <h3>💰 Donate</h3>
+      <input id="amount" placeholder="Enter amount">
       <button onclick="donate()">Donate</button>
     </div>
 
     <div class="card">
-      <h3>Your Donations</h3>
+      <h3>📊 Summary</h3>
+      <p>Total Donations: ₹<span id="total">0</span></p>
+    </div>
+
+    <div class="card">
+      <h3>📜 Your Donations</h3>
       <ul id="donations">Loading...</ul>
     </div>
   `;
@@ -255,54 +300,38 @@ function showDashboard() {
 
 // DONATE
 async function donate() {
-  try {
-    await fetch(`${API}/api/donations`, {
-      method: "POST",
-      headers: {
-        "Content-Type":"application/json",
-        "Authorization": "Bearer " + token
-      },
-      body: JSON.stringify({
-        amount: document.getElementById("amount").value
-      })
-    });
+  await fetch(`${API}/api/donations`, {
+    method: "POST",
+    headers: {
+      "Content-Type":"application/json",
+      "Authorization": "Bearer " + token
+    },
+    body: JSON.stringify({
+      amount: document.getElementById("amount").value
+    })
+  });
 
-    loadDonations();
-  } catch {
-    alert("Donation failed");
-  }
+  loadDonations();
 }
 
-// LOAD DONATIONS (LATEST FIRST)
+// LOAD DONATIONS
 async function loadDonations() {
-  try {
-    const res = await fetch(`${API}/api/donations`, {
-      headers: {
-        "Authorization": "Bearer " + token
-      }
-    });
+  const res = await fetch(`${API}/api/donations`, {
+    headers: {"Authorization": "Bearer " + token}
+  });
 
-    const data = await res.json();
-    const list = document.getElementById("donations");
+  const data = await res.json();
+  const list = document.getElementById("donations");
 
-    if (!Array.isArray(data)) {
-      list.innerHTML = "Error loading donations";
-      return;
-    }
+  let total = 0;
+  list.innerHTML = "";
 
-    if (data.length === 0) {
-      list.innerHTML = "<li>No donations yet</li>";
-      return;
-    }
+  data.slice().reverse().forEach(d => {
+    total += Number(d.amount);
+    list.innerHTML += `<li>💸 ₹${d.amount}</li>`;
+  });
 
-    list.innerHTML = "";
-    data.slice().reverse().forEach(d => {
-      list.innerHTML += `<li>💸 ₹${d.amount}</li>`;
-    });
-
-  } catch {
-    document.getElementById("donations").innerHTML = "Server error";
-  }
+  document.getElementById("total").innerText = total;
 }
 
 // LOGOUT
@@ -311,6 +340,34 @@ function logout() {
   token = null;
   updateNav();
   showHome();
+}
+
+// CHATBOX
+function toggleChat(){
+  let body = document.getElementById("chatbody");
+  body.style.display = body.style.display === "none" ? "block" : "none";
+}
+
+function sendMsg(){
+  let input = document.getElementById("chatInput");
+  let msg = input.value.toLowerCase();
+  let log = document.getElementById("chatlog");
+
+  log.innerHTML += `<div class="msg-user">🧑 ${msg}</div>`;
+
+  let reply = "Try asking about donations, NGOs or how the site works.";
+
+  if(msg.includes("donation"))
+    reply = "You can donate from dashboard and track all transactions.";
+  else if(msg.includes("money"))
+    reply = "Funds go towards food, education and healthcare.";
+  else if(msg.includes("how"))
+    reply = "Signup → Login → Donate → Track history.";
+  else if(msg.includes("ngo"))
+    reply = "NGOs are organizations helping communities in need.";
+
+  log.innerHTML += `<div class="msg-bot">🤖 ${reply}</div>`;
+  input.value = "";
 }
 
 // INIT
