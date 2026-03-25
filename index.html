@@ -6,27 +6,50 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI';}
+* {margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif;}
 
-body{
-  background:#0f2027;
-  color:white;
+body {
+  background: var(--bg);
+  color: var(--text);
+  transition: 0.3s;
+  perspective: 1000px;
+}
+
+:root {
+  --bg:#0f2027;
+  --text:white;
+  --card:rgba(255,255,255,0.08);
+}
+
+/* ORANGE LIGHT MODE */
+.light {
+  --bg:#fff3e0;
+  --text:#5d4037;
+  --card:#ffffff;
 }
 
 /* NAV */
-header{
+header {
   display:flex;
   justify-content:space-between;
   padding:15px 40px;
   background:rgba(0,0,0,0.3);
 }
 
-.nav-right button{
-  margin-left:10px;
+.nav-right {
+  display:flex;
+  align-items:center;
+  gap:10px;
 }
 
-/* BUTTON */
-button{
+#profile {
+  display:none;
+  padding:8px 12px;
+  background:rgba(255,255,255,0.1);
+  border-radius:20px;
+}
+
+button {
   padding:10px 16px;
   border:none;
   border-radius:20px;
@@ -35,50 +58,83 @@ button{
   cursor:pointer;
 }
 
-/* CONTAINER */
-.container{
-  padding:40px;
-  text-align:center;
+button:hover {
+  transform: translateY(-3px) scale(1.05);
+  background:#ff3b3b;
 }
 
+/* CONTAINER */
+.container {padding:60px;text-align:center;}
+
+/* HERO */
+.hero h1 {font-size:50px;margin-bottom:10px;}
+.hero p {margin-bottom:20px;color:#ccc;}
+
 /* CARD */
-.card{
-  background:rgba(255,255,255,0.08);
+.card {
+  background:var(--card);
   padding:25px;
-  margin:20px auto;
+  margin:40px auto;
   border-radius:15px;
-  width:300px;
+  width:320px;
+  transition:0.4s;
+}
+
+.card:hover {
+  transform: rotateX(5deg) rotateY(5deg) scale(1.03);
 }
 
 /* DASH */
-.dash-container{
+.dash-container {
   display:flex;
-  justify-content:center;
-  gap:30px;
   flex-wrap:wrap;
+  justify-content:center;
+  gap:20px;
 }
 
-/* HISTORY */
-.history-box{
-  width:600px;
-  margin:30px auto;
-  background:rgba(255,255,255,0.08);
-  padding:20px;
+.dash-card {
+  background:var(--card);
+  padding:25px;
   border-radius:15px;
+  width:260px;
 }
 
-ul{
-  list-style:none;
+input {
+  padding:10px;
+  width:90%;
+  border-radius:8px;
+  border:none;
+  margin:5px;
 }
 
-ul li{
+ul {list-style:none;}
+ul li {
   display:flex;
   justify-content:space-between;
   padding:12px;
-  margin:8px 0;
+  margin:10px 0;
+  border-radius:10px;
   background:rgba(255,255,255,0.05);
-  border-radius:8px;
 }
+
+/* CHAT */
+#chatbox {
+  position:fixed;
+  bottom:20px;
+  right:20px;
+  width:260px;
+  background:var(--card);
+  border-radius:12px;
+}
+
+#chatheader {
+  background:#ff6b6b;
+  padding:10px;
+  cursor:pointer;
+}
+
+#chatbody {display:none;padding:10px;}
+#chatlog {height:150px;overflow:auto;font-size:13px;}
 </style>
 </head>
 
@@ -86,65 +142,86 @@ ul li{
 
 <header>
   <h2>🚀 Crazy Coders</h2>
+
   <div class="nav-right">
+    <span id="profile"></span>
+
     <button onclick="showHome()">Home</button>
     <button id="loginBtn" onclick="showLogin()">Login</button>
     <button id="signupBtn" onclick="showSignup()">Signup</button>
     <button id="dashboardBtn" onclick="showDashboard()" style="display:none;">Dashboard</button>
     <button id="logoutBtn" onclick="logout()" style="display:none;">Logout</button>
+    <button onclick="toggleTheme()">🌗</button>
   </div>
 </header>
 
 <div class="container" id="app"></div>
 
+<!-- CHAT -->
+<div id="chatbox">
+  <div id="chatheader" onclick="toggleChat()">💬 Help</div>
+  <div id="chatbody">
+    <div id="chatlog"></div>
+    <input id="chatInput">
+    <button onclick="sendMsg()">Send</button>
+  </div>
+</div>
+
 <script>
 const API="https://ngo-backend-5zc1.onrender.com";
 let token=localStorage.getItem("token");
 
+function toggleTheme(){document.body.classList.toggle("light");}
+
 /* NAV */
 function updateNav(){
+  let email = localStorage.getItem("email");
+
   if(token){
     loginBtn.style.display="none";
     signupBtn.style.display="none";
     dashboardBtn.style.display="inline";
     logoutBtn.style.display="inline";
-  }else{
+
+    let username = email ? email.split("@")[0] : "User";
+    profile.style.display="inline";
+    profile.innerText="👤 " + username;
+
+  } else {
     loginBtn.style.display="inline";
     signupBtn.style.display="inline";
     dashboardBtn.style.display="none";
     logoutBtn.style.display="none";
+    profile.style.display="none";
   }
 }
 
 /* HOME */
 function showHome(){
   app.innerHTML=`
+  <div class="hero">
     <h1>Crazy Coders 🌍</h1>
-    <p>Donate and track impact transparently</p>
+    <p>Innovating for NGOs • Transparency • Impact</p>
     <button onclick="showLogin()">Get Started</button>
-  `;
+  </div>`;
 }
 
 /* LOGIN */
 function showLogin(){
   app.innerHTML=`
-    <div class="card">
-      <h2>Login</h2>
-      <input id="email" placeholder="Email"><br><br>
-      <input id="password" type="password" placeholder="Password"><br><br>
-      <button onclick="login()">Login</button>
-    </div>
-  `;
+  <div class="card">
+    <h2>Login</h2>
+    <input id="email" placeholder="Email"><br>
+    <input id="password" type="password" placeholder="Password"><br>
+    <button onclick="login()">Login</button>
+  </div>`;
 }
 
 async function login(){
   const res=await fetch(API+"/api/auth/login",{
     method:"POST",
     headers:{"Content-Type":"application/json"},
-    body:JSON.stringify({
-      email:email.value,
-      password:password.value
-    })
+    body:JSON.stringify({email:email.value,password:password.value})
   });
 
   const data=await res.json();
@@ -152,70 +229,71 @@ async function login(){
   if(data.token){
     token=data.token;
     localStorage.setItem("token",token);
-    localStorage.setItem("email",email.value);
+    localStorage.setItem("email", email.value);
 
     updateNav();
     showDashboard();
-  }else{
-    alert("Login failed");
   }
 }
 
 /* SIGNUP */
 function showSignup(){
   app.innerHTML=`
-    <div class="card">
-      <h2>Signup</h2>
-      <input id="email"><br><br>
-      <input id="password" type="password"><br><br>
-      <button onclick="signup()">Signup</button>
-    </div>
-  `;
+  <div class="card">
+    <h2>Signup</h2>
+    <input id="email" placeholder="Email"><br>
+    <input id="password" type="password" placeholder="Password"><br>
+    <button onclick="signup()">Signup</button>
+  </div>`;
 }
 
 async function signup(){
   await fetch(API+"/api/auth/signup",{
     method:"POST",
     headers:{"Content-Type":"application/json"},
-    body:JSON.stringify({
-      email:email.value,
-      password:password.value
-    })
+    body:JSON.stringify({email:email.value,password:password.value})
   });
-
-  alert("Signup successful");
+  alert("Signup done");
   showLogin();
 }
 
 /* DASHBOARD */
 function showDashboard(){
   app.innerHTML=`
-    <h1>📊 Dashboard</h1>
+  <h1>📊 Dashboard</h1>
 
-    <div class="dash-container">
-      <div class="card">
-        <h3>💰 Donate</h3>
-        <input id="amount" placeholder="Enter amount"><br><br>
-        <button onclick="donate()">Donate</button>
-      </div>
+  <div class="dash-container">
+    <div class="dash-card">
+      <h3>💰 Donate</h3>
+      <input id="amount" placeholder="Enter amount">
+      <button onclick="donate()">Donate</button>
     </div>
+  </div>
 
-    <div class="history-box">
-      <h2>📜 Donation History</h2>
-      <ul id="donations"></ul>
+  <div style="max-width:700px;margin:40px auto;">
+    <div class="dash-card" style="width:100%;padding:30px;">
+      <h3 style="font-size:22px;">📜 Donation History</h3>
+      <ul id="donations" style="margin-top:20px;"></ul>
     </div>
+  </div>
   `;
 
   loadDonations();
 }
 
-/* DONATE */
+/* PAYMENT */
 function donate(){
   let amt=amount.value;
-  let email=localStorage.getItem("email");
-  let username=email.split("@")[0];
+  let email = localStorage.getItem("email") || "user";
+  let username = email.split("@")[0];
 
-  confirmPayment(username,amt);
+  app.innerHTML=`
+  <div class="card">
+    <h2>💳 Payment</h2>
+    <p>Name: ${username}</p>
+    <p>Amount: ₹${amt}</p>
+    <button onclick="confirmPayment('${username}',${amt})">Pay Now</button>
+  </div>`;
 }
 
 async function confirmPayment(username,amount){
@@ -225,10 +303,10 @@ async function confirmPayment(username,amount){
       "Content-Type":"application/json",
       "Authorization":"Bearer "+token
     },
-    body:JSON.stringify({amount,username})
+    body:JSON.stringify({amount, username})
   });
 
-  alert("Donation successful");
+  alert("Payment Successful");
   showDashboard();
 }
 
@@ -239,19 +317,21 @@ async function loadDonations(){
   });
 
   const data=await res.json();
-
   donations.innerHTML="";
 
   data.slice().reverse().forEach(d=>{
-    // 🚫 SKIP BAD DATA
-    if(!d.username || !d.amount) return;
+
+    let username = d.username 
+      ? d.username 
+      : (d.email ? d.email.split("@")[0] : "Anonymous");
+
+    let amount = d.amount ? d.amount : 0;
 
     donations.innerHTML+=`
-      <li>
-        <span>👤 ${d.username}</span>
-        <span>₹${d.amount}</span>
-      </li>
-    `;
+    <li>
+      <span>👤 ${username}</span>
+      <span>₹${amount}</span>
+    </li>`;
   });
 }
 
@@ -262,6 +342,25 @@ function logout(){
   token=null;
   updateNav();
   showHome();
+}
+
+/* CHAT */
+function toggleChat(){
+  chatbody.style.display=chatbody.style.display==="none"?"block":"none";
+}
+
+function sendMsg(){
+  let msg=chatInput.value.toLowerCase();
+  chatlog.innerHTML+=`<div>🧑 ${msg}</div>`;
+
+  let reply="Ask about donations or NGOs";
+
+  if(msg.includes("donation")) reply="Donate from dashboard and track history";
+  else if(msg.includes("money")) reply="Funds go to food, education and health";
+  else if(msg.includes("how")) reply="Signup → Login → Donate";
+
+  chatlog.innerHTML+=`<div>🤖 ${reply}</div>`;
+  chatInput.value="";
 }
 
 /* INIT */
